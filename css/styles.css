@@ -7,13 +7,13 @@
    CSS Variables (Color Scheme)
    ========================= */
 :root {
-    --primary-color: #4d1979;      /* TCU Purple */
-    --secondary-color: #7c3aed;    /* Light Purple */
+    --primary-color: #da2525;      /* TCU Purple */
+    --secondary-color: #06bcc1;    /* Light Purple */
     --accent-color: #ffd700;       /* Gold accent */
     --text-color: #333;            /* Dark gray for text */
     --text-secondary: #64748b;     /* Lighter gray for captions */
-    --bg-color: #f4f4f4;           /* Light background */
-    --white: #ffffff;
+    --bg-color: #0d3b66;           /* Light background */
+    --white: #f45b69;
 }
 
 /* =========================
@@ -111,7 +111,7 @@ main {
 
 /* All sections inside main get consistent styling */
 main section {
-    background-color: white;
+    background-color: #faf0ca;
     padding: 2rem;
     margin-bottom: 2rem;       /* Space between sections */
     border-radius: 8px;        /* Rounded corners */
