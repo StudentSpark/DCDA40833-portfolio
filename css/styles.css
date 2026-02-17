@@ -7,13 +7,13 @@
    CSS Variables (Color Scheme)
    ========================= */
 :root {
-    --primary-color: #da2525;      /* TCU Purple */
-    --secondary-color: #06bcc1;    /* Light Purple */
+    --primary-color: #da2525;      /* Red */
+    --secondary-color: #06bcc1;    /* Light Blue */
     --accent-color: #ffd700;       /* Gold accent */
     --text-color: #333;            /* Dark gray for text */
     --text-secondary: #64748b;     /* Lighter gray for captions */
-    --bg-color: #0d3b66;           /* Light background */
-    --white: #f45b69;
+    --bg-color: #0d3b66;           /* Dark Background */
+    --white: #f45b69;              /* Off-white for sections */
 }
 
 /* =========================
@@ -65,14 +65,48 @@ nav {
     padding: 0.75rem;
     display: flex;              /* Make nav a flex container */
     justify-content: center;    /* Center the ul inside nav */
+    align-items: center;        /* Vertically center items */
     position: sticky;           /* Stick to top when scrolling */
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Hamburger Menu Button */
+.hamburger {
+    display: none;              /* Hidden on desktop */
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 101;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Hamburger Animation when active */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
 /* Style the navigation list */
-nav ul {
+nav .nav-menu {
     list-style: none;           /* Remove bullets */
     padding: 0;                 /* Remove default padding */
     margin: 0;                  /* Remove default margin */
@@ -382,18 +416,49 @@ footer a:hover {
 
     nav {
         font-size: 0.9rem;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
     }
 
-    /* Stack navigation vertically on mobile */
-    nav ul {
-        flex-direction: column;  /* Change from row to column */
-        align-items: center;     /* Center the stacked items */
+    /* Show hamburger on mobile */
+    .hamburger {
+        display: flex;
+    }
+
+    /* Hide menu by default on mobile */
+    nav .nav-menu {
+        position: fixed;
+        left: -100%;            /* Hidden off-screen */
+        top: 56px;              /* Below nav bar */
+        flex-direction: column;
+        background-color: #3d1461;
+        width: 100%;
+        text-align: center;
+        transition: left 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
+        gap: 0;                 /* Remove gap for mobile */
+    }
+
+    /* Show menu when active */
+    nav .nav-menu.active {
+        left: 0;                /* Slide in from left */
+    }
+
+    nav .nav-menu li {
+        width: 100%;
+        padding: 0;
     }
 
     nav a {
-        display: block;          /* Full width for easier tapping */
+        display: block;
         width: 100%;
+        padding: 1rem;
         text-align: center;
+    }
+
+    nav a:hover {
+        background-color: var(--primary-color);
     }
 
     main section {
