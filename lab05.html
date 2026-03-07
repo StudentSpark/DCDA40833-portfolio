@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization Critique | Your Name</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="lab02.html">Lab 2: AI Evaluation</a>
+            <a href="lab03.html" class="active">Lab 3: Visualization Critique</a>
+            <a href="lab04.html" class="active">Lab 4: Tableau Visualization</a>
+            <!-- Add more lab links as the semester progresses -->
+            <!-- AI-GENERATED: Dark mode toggle switch for visual comfort in low-light environments -->
+            <div class="dark-mode-toggle">
+                <span class="toggle-label">Dark Mode</span>
+                <label class="toggle-switch" aria-label="Toggle dark mode">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </nav>
+        <h1>Vibe Coding</h1>
+    </header>
+
+    <main>
+        
+
+        <section>
+            <h2>Critique</h2>
+            
+            <h3>Information Resolution</h3>
+            <p>
+
+
+ This was a rather interesting lab to work on! This was also one of the more difficult for me, as I had to gauge my own abilities in order to not outpace them and rely entirely on the AI assistants. The first experiment I undertook was using the AI to improve my portfolio by adding a simple night-mode option and a slider button. As I know fairly little about HTML and CSS, I felt this was a good way to start. Going through the code, it's fairly easy to follow, but as I don’t know HTML or CSS syntax, I feel I would have a hard time making it from scratch. The logic is simple, it's a check box that switches the color palette to a darker one it generated and defined in the CSS code. Additionally, the assembly of the slider as an aesthetic cover to the check box is fairly simple - just defining the individual parts and how they interact and change when clicked. Where I get lost in this process is the code used to make the night-mode smoothly transition. I had to fix a few bugs here and there. First was adding the buttons to other pages besides the home page, and the second was linking them to the night-mode function so they actually worked. All in all, the AI was very helpful with this one. I had a clear idea that I wanted to implement, and it knew how to implement it. I did take a bit of a back seat in the creation since I don’t know much about CSS and HTML, but I was able to follow its work and understand (for the most part) what it did.</p>
+ <p>
+	I performed my second experiment a little differently. I had it visualize some data from a dataset I had used several years ago to see how it would compare. The dataset was sourced from Kaggle, and it focused on videogames hosted on the Steam platform. I did accidentally leave it a little vague on what to do, but generally tried to guide it to find correlation between playercount and various variables listed in the dataset. This experiment did not go quite as smoothly as the first for two main reasons. First, it was made on Google Colab via Google’s free Gemini AI. This AI is less capable than the paid models for coding found on VS Code’s Copilot program (Claude mostly). Second, I had less of a vision on what I wanted to do with this experiment compared to the first, so it was a much less focused experience. The AI still produced usable graphs and visualizations, but not to the same focus or extent as I was originally imagining.
+
+</p>
+<p>
+In conclusion, I believe there is still very much a place for humans in coding spaces. Purely AI designed work tends to be very generic and dull at best, and often needs a guiding hand to get anything done at all. I view AI as a tool, not a miracle invention that can replace everyone. Similar to the “steam shovels” of the industrial revolution, it may allow one person to do the work of twenty, but you still need that person to actually dig that hole. Additionally, while incredibly helpful, I find it occasionally detrimental when learning new technology. It's simply too helpful, and feels almost impossible to not rely on it when still learning, it's just easier to ask it to do the work for you. As such, it's great for accelerating work you’re already capable of, and it is useful for reaching outside of your current capabilities, but if you aren’t careful then you risk making mistakes you don’t even know to look for. 
+
+</p>
+
+            <h2>Experiment 1: Darkmode Demo</h2>
+            <figure>
+                <img src="images/Darkmode Demo.png" alt="Demonstration of AI generated darkmode feature" width="500" style="display: block; margin-left: auto; margin-right: auto;">
+            </figure>
+            <p style="text-align: center;">Visual demonstration of dark mode feature in action.
+            </p>
+            <h3> Key Code Comments</h3>
+            <p>Most of this experiment was fairly understandable. Simple CSS to design the switch, and HTML to place it properly. Only stand-out to me was the transition effect code in CSS, as seen below.</p>
+            <pre><code class="language-css">/* This part of the code is a little beyond me as of right now. Ran it through an AI to explain line-by-line so I undertand it conceptually, but I'm still blurry on the details. */
+# Defines the styles for images within the visualization container.
+                .viz-container img {
+    max-width: 100%;           /* Responsive: never wider than container */
+    height: auto;              /* Maintain aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    transition: opacity 0.3s ease; /* AI-GENERATED: Smooth dark mode transition */
+}
+/* This applies a transition effect to all images during the dark mode toggle. Makes the transition smoother and more pleasant to users. */
+
+/* AI-GENERATED: Reduce image brightness in dark mode for better viewing comfort */
+:root.dark-mode .viz-container img,
+:root.dark-mode img {
+    opacity: 0.9;
+}
+
+/*Reduces opacity of images in dark mode to make them easier on the eyes and blend with the darker background. */
+
+/* AI-GENERATED: Restore full brightness on hover in dark mode */
+:root.dark-mode .viz-container img:hover,
+:root.dark-mode img:hover {
+    opacity: 1;
+}
+            </code></pre>
+            
+            <h2>Experiment 2: Data Visualization</h2>
+            <figure>
+                <img src="images/AI Graphs.png" alt="AI generated graphs" width="500" style="display: block; margin-left: auto; margin-right: auto;">
+            </figure>
+            <p style="text-align: center;">AI Generated Graphs charting against game release date.</p>
+
+              <h3> Key Code Comments</h3>
+            <p>Being from a Jupiter Notebook this code is a little different than elsewhere, but fairly standard. Typical seaborn implementation and fairly similar to my work on a previous class. </p>
+
+            <pre><code class="language-python">
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# Most of the code is fairly simple here. Only so many ways to generate a table with seaborn I suppose.
+# Otherwise, fairly straight forward, if aa little over-commented and some of the variable names are odd. 
+# Following Code is AI generated:
+
+# Here it filters the dataframe, groups it by 'Release_Year', and performs some basic calculations to find changes over time.
+# 1. Group by 'Release_Year' and calculate the mean for specified numerical variables
+# Filter out future years for more meaningful trends
+temporal_trends_df = df[df['Release_Year'] <= 2024].groupby('Release_Year')[['Price', 'Positive', 'Negative', 'Peak CCU', 'Estimated owners', 'Recommendations']].mean().reset_index()
+
+# Fairly standard code to generate a line plot with seaborn, here it sets up the figures and axes for the subplots.
+# 2. Create a figure with subplots
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(16, 18))
+axes = axes.flatten() # Flatten the 2x3 array of axes for easy iteration
+
+# Here it sets up the list of variables to plot.
+# List of variables to plot
+variables_to_plot = ['Price', 'Positive', 'Negative', 'Peak CCU', 'Estimated owners', 'Recommendations']
+
+# For loop to iterate through each variable and create a line plot for it. Some basic customization is done to make the plots more visually appealing and easier to read.
+# 3. Iterate and plot for each variable
+for i, col in enumerate(variables_to_plot):
+    sns.lineplot(x='Release_Year', y=col, data=temporal_trends_df, ax=axes[i])
+
+    # 4. Customize plots
+    axes[i].set_title(f'Average {col} Over Time', fontsize=14) # Add title
+    axes[i].set_xlabel('Release Year', fontsize=12) # Label x-axis
+    axes[i].set_ylabel(f'Average {col}', fontsize=12) # Label y-axis
+    axes[i].tick_params(axis='x', rotation=45) # Rotate x-axis labels
+    axes[i].grid(True, linestyle='--', alpha=0.7) # Add grid
+
+# 5. Use plt.tight_layout() to ensure all plots and titles are visible and prevent overlap.
+plt.tight_layout()
+
+# Display the plots
+plt.show()
+# Conclusion of AI Code
+            
+            </code></pre>
+            <h3> Jupiter Notebook File</h3>
+            <p><a href="https://github.com/StudentSpark/DCDA40833-portfolio/blob/8db014497f3942ce874bf03780ee22f90528022b/Lab_5_Data_Visualization_AI.ipynb" target="_blank">View Jupyter Notebook on GitHub</a></p>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p>© 2026 Stephen Park</p>
+    </footer>
+    
+    <script src="js/navigation.js"></script>
+    <!-- Highlight.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

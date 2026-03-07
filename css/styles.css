@@ -15,6 +15,18 @@
     --bg-color: #0d3b66;           /* Dark Background */
     --white: #f45b69;              /* Off-white for sections */
 }
+/* AI defined darkmode colorscheme. Somehow it found a way to make a similiar colorscheme in a darker format. Looks nice! */
+
+/* AI-GENERATED: Dark mode color variables for low-light environment viewing */
+:root.dark-mode {
+    --primary-color: #ff4444;      /* Brighter red for dark mode */
+    --secondary-color: #00d4d8;    /* Brighter cyan for dark mode */
+    --accent-color: #ffed4e;       /* Brighter gold for dark mode */
+    --text-color: #e4e4e4;         /* Light gray text */
+    --text-secondary: #94a3b8;     /* Lighter secondary text */
+    --bg-color: #0a1929;           /* Darker background */
+    --white: #1e293b;              /* Dark sections background */
+}
 
 /* =========================
    Basic Reset & Typography
@@ -34,6 +46,7 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--bg-color);
+    transition: background-color 0.3s ease, color 0.3s ease; /* AI-GENERATED: Smooth dark mode transition */
 }
 
 /* =========================
@@ -70,6 +83,9 @@ nav {
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;            /* AI-GENERATED: Allow wrapping on smaller screens */
+    gap: 0.5rem;                /* AI-GENERATED: Add spacing between direct nav children */
+    /* Enabling mobile functionality. I understand the basics of how this works, but I did not know these functions existed. */
 }
 
 /* Hamburger Menu Button */
@@ -129,8 +145,85 @@ nav a {
     border-radius: 4px;
 }
 
+/* AI-GENERATED: Style for direct anchor links in nav (lab pages without menu structure) */
+nav > a {
+    flex-shrink: 0;
+}
+
 nav a:hover {
     background-color: var(--primary-color);
+}
+/* Conceptually I understand how this section works. It sets up each aspect of the visual design of the button. I couldn't do this as of right now, but with some training and experience it looks fairly simple to set up. I am surprised (based on this generated code) that there isn't a preset for the design of the button.
+
+/* AI-GENERATED: Dark mode toggle switch styles */
+.dark-mode-toggle {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.5rem;
+}
+
+/* AI-GENERATED: Label for dark mode toggle */
+.toggle-label {
+    color: white;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* AI-GENERATED: Toggle switch container */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    cursor: pointer;
+}
+
+/* AI-GENERATED: Hide the default checkbox */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* AI-GENERATED: The slider background */
+.toggle-switch .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+/* AI-GENERATED: The slider button */
+.toggle-switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+/* AI-GENERATED: Checked state - move slider and change color */
+.toggle-switch input:checked + .slider {
+    background-color: var(--secondary-color);
+}
+
+.toggle-switch input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* AI-GENERATED: Focus state for accessibility */
+.toggle-switch input:focus + .slider {
+    box-shadow: 0 0 1px var(--secondary-color);
 }
 
 /* =========================
@@ -150,6 +243,13 @@ main section {
     margin-bottom: 2rem;       /* Space between sections */
     border-radius: 8px;        /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* AI-GENERATED: Smooth dark mode transition */
+}
+
+/* AI-GENERATED: Dark mode section styling */
+:root.dark-mode main section {
+    background-color: var(--white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Style h2 headings inside sections */
@@ -194,12 +294,26 @@ main section li {
     text-align: center;
 }
 
+/* I'll be honest I have no idea how it does the smooth transition for dark mode. I've personally never seen anything like this*/
 .viz-container img {
     max-width: 100%;           /* Responsive: never wider than container */
     height: auto;              /* Maintain aspect ratio */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 0.5rem;
+    transition: opacity 0.3s ease; /* AI-GENERATED: Smooth dark mode transition */
+}
+
+/* AI-GENERATED: Reduce image brightness in dark mode for better viewing comfort */
+:root.dark-mode .viz-container img,
+:root.dark-mode img {
+    opacity: 0.9;
+}
+
+/* AI-GENERATED: Restore full brightness on hover in dark mode */
+:root.dark-mode .viz-container img:hover,
+:root.dark-mode img:hover {
+    opacity: 1;
 }
 
 /* Figure captions */
@@ -245,6 +359,13 @@ p code, li code {
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     font-size: 0.9em;
+}
+
+/* AI-GENERATED: Dark mode code block styling */
+:root.dark-mode p code,
+:root.dark-mode li code {
+    background: #2d2d2d;
+    color: #ff79c6;
 }
 
 /* Code block titles */
@@ -354,6 +475,12 @@ tr:nth-child(even) {
     position: relative;
 }
 
+/* AI-GENERATED: Dark mode portfolio card styling */
+:root.dark-mode .portfolio-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
 .portfolio-card:hover {
     border-color: var(--primary-color);
     box-shadow: 0 8px 16px rgba(77, 25, 121, 0.15);
@@ -459,6 +586,17 @@ footer a:hover {
 
     nav a:hover {
         background-color: var(--primary-color);
+    }
+
+    /* AI-GENERATED: Position dark mode toggle on mobile */
+    .dark-mode-toggle {
+        margin-left: 0;
+        padding: 0;
+    }
+
+    /* AI-GENERATED: Hide label text on mobile to save space */
+    .toggle-label {
+        display: none;
     }
 
     main section {
