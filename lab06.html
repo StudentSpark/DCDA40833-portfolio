@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hometown Map | Stephen Park</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .map-frame {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f7f7f7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="lab02.html">AI Evaluation</a></li>
+            <li><a href="lab03.html">Tufte Critique</a></li>
+            <li><a href="lab04.html">Tableau Viz</a></li>
+            <li><a href="lab05.html">Vibe Coding Analysis</a></li>
+            <li><a href="lab06.html">Hometown Map</a></li>
+            <!-- Add more lab links as the semester progresses -->
+            <!-- AI-GENERATED: Dark mode toggle switch for visual comfort in low-light environments -->
+            <div class="dark-mode-toggle">
+                <span class="toggle-label">Dark Mode</span>
+                <label class="toggle-switch" aria-label="Toggle dark mode">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </nav>
+        <h1>Lab 6: Hometown Map</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>Interactive Folium Map</h2>
+            <p>This map is generated from Python using Folium + Mapbox and embedded below.</p>
+            <iframe
+                class="map-frame"
+                src="Lab6Map/fort_worth_map.html"
+                title="Hometown POI Map"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <p>
+                If the map does not load after updates, rerun <strong>Lab6Map/lab06.py</strong> to regenerate
+                <strong>Lab6Map/fort_worth_map.html</strong>.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Stephen Park</p>
+    </footer>
+    
+    <script src="js/navigation.js"></script>
+</body>
+</html>

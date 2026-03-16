@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5c2fe0184111fcdf36a860eb9f42b1c8 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_5c2fe0184111fcdf36a860eb9f42b1c8" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_5c2fe0184111fcdf36a860eb9f42b1c8 = L.map(
+                "map_5c2fe0184111fcdf36a860eb9f42b1c8",
+                {
+                    center: [32.73047942857143, -97.30573278571428],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3adbf997772788a52e0b80e91f730290 = L.tileLayer(
+                "https://api.mapbox.com/styles/v1/thegreatscienceman42/cmmidngy8000m01qp5nlghh7r/tiles/512/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhlZ3JlYXRzY2llbmNlbWFuNDIiLCJhIjoiY21tcjFtcngxMTRtazJxcTQ0MDIzaWoyYSJ9.10xeOmOpXRe-uMRAoQYMeg",
+                {"attribution": "\u00a9 \u003ca href=\"https://www.mapbox.com/about/maps/\"\u003eMapbox\u003c/a\u003e \u00a9 \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_3adbf997772788a52e0b80e91f730290.addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var marker_fa2e8cacd33a10ecf25ec7c4e1c08143 = L.marker(
+                [32.71127, -97.36101],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_b0b39b3c1a7bc722462a123c8bb722b5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "graduation-cap", "iconColor": "white", "markerColor": "blue", "prefix": "fa"}
+            );
+            marker_fa2e8cacd33a10ecf25ec7c4e1c08143.setIcon(icon_b0b39b3c1a7bc722462a123c8bb722b5);
+        
+    
+        var popup_00701acd1fd1482b2568ed1df8167301 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_21e5b676630b38d25d4e3814332820d8 = $(`<div id="html_21e5b676630b38d25d4e3814332820d8" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Texas Christian University</h4>             <img src="https://www.tcu.edu/news/images/CommonsCelebrationAerial-news-lg.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Texas Christian University is a private research university in Fort Worth, Texas, United States. It was established in 1873 by brothers Addison and Randolph Clark as the AddRan Male & Female College. It is affiliated with the Christian Church. The campus is located on 302 acres about 4 miles from downtown Fort Worth. The university consists of nine constituent colleges and schools.             </p>         </div>         </div>`)[0];
+                popup_00701acd1fd1482b2568ed1df8167301.setContent(html_21e5b676630b38d25d4e3814332820d8);
+            
+        
+
+        marker_fa2e8cacd33a10ecf25ec7c4e1c08143.bindPopup(popup_00701acd1fd1482b2568ed1df8167301)
+        ;
+
+        
+    
+    
+            marker_fa2e8cacd33a10ecf25ec7c4e1c08143.bindTooltip(
+                `<div>
+                     Texas Christian University
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_31b1c8f885c1a7f0a316c919f18f4de7 = L.marker(
+                [32.81237, -97.35609],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_9ec8ec4481bd5987f4cd148165d7897d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "university", "iconColor": "white", "markerColor": "purple", "prefix": "fa"}
+            );
+            marker_31b1c8f885c1a7f0a316c919f18f4de7.setIcon(icon_9ec8ec4481bd5987f4cd148165d7897d);
+        
+    
+        var popup_6ea0af55e3214a01e40e50ac8bc3cc91 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_e36e4fff819e2b04ec21719e608cd141 = $(`<div id="html_e36e4fff819e2b04ec21719e608cd141" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Vintage Flying Museum</h4>             <img src="https://vintageflyingmuseum.org/wp-content/uploads/2022/03/cropped-vfm_hdr1.5-scaled-1.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Historic aviation museum. Maintains and restores aircraft to an airworthy state             </p>         </div>         </div>`)[0];
+                popup_6ea0af55e3214a01e40e50ac8bc3cc91.setContent(html_e36e4fff819e2b04ec21719e608cd141);
+            
+        
+
+        marker_31b1c8f885c1a7f0a316c919f18f4de7.bindPopup(popup_6ea0af55e3214a01e40e50ac8bc3cc91)
+        ;
+
+        
+    
+    
+            marker_31b1c8f885c1a7f0a316c919f18f4de7.bindTooltip(
+                `<div>
+                     Vintage Flying Museum
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_94527aa27879a3755e98ed4a0f895395 = L.marker(
+                [32.716314, -97.352472],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_aa30ba3e20d6244981250a4386f5e73b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cutlery", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_94527aa27879a3755e98ed4a0f895395.setIcon(icon_aa30ba3e20d6244981250a4386f5e73b);
+        
+    
+        var popup_5b26aba8fba23be303a04f7c3358d6aa = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_27d143830a04fbd1e660c06f80c3d1ec = $(`<div id="html_27d143830a04fbd1e660c06f80c3d1ec" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Greek House</h4>             <img src="https://sellingthefort.com/wp-content/uploads/2025/06/Greek-House-.webp"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Family run greek restraunt.             </p>         </div>         </div>`)[0];
+                popup_5b26aba8fba23be303a04f7c3358d6aa.setContent(html_27d143830a04fbd1e660c06f80c3d1ec);
+            
+        
+
+        marker_94527aa27879a3755e98ed4a0f895395.bindPopup(popup_5b26aba8fba23be303a04f7c3358d6aa)
+        ;
+
+        
+    
+    
+            marker_94527aa27879a3755e98ed4a0f895395.bindTooltip(
+                `<div>
+                     Greek House
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b4107e33da6fc4e669c65ad17de9c954 = L.marker(
+                [32.75983, -97.25661],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_6a152e90786514bd0cc7e99dde6b1add = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "graduation-cap", "iconColor": "white", "markerColor": "blue", "prefix": "fa"}
+            );
+            marker_b4107e33da6fc4e669c65ad17de9c954.setIcon(icon_6a152e90786514bd0cc7e99dde6b1add);
+        
+    
+        var popup_fe0d57b6b84da9c03c74b1f583bba784 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_6017742bb6b8ba92bb3bb5b53887cd55 = $(`<div id="html_6017742bb6b8ba92bb3bb5b53887cd55" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Nolan Catholic Highschool</h4>             <img src="https://educationsnapshots.com/wp-content/uploads/sites/4/2021/07/nolan-catholic-high-school-2-1050x750-compact.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Nolan Catholic High School is a private, coeducational, college preparatory school, formerly in the Marianist tradition, and is located in the Diocese of Fort Worth, Texas. It serves grades 9-12, has an average student population of 800, and serves the Church by educating and forming youth in the Catholic faith through its mission.             </p>         </div>         </div>`)[0];
+                popup_fe0d57b6b84da9c03c74b1f583bba784.setContent(html_6017742bb6b8ba92bb3bb5b53887cd55);
+            
+        
+
+        marker_b4107e33da6fc4e669c65ad17de9c954.bindPopup(popup_fe0d57b6b84da9c03c74b1f583bba784)
+        ;
+
+        
+    
+    
+            marker_b4107e33da6fc4e669c65ad17de9c954.bindTooltip(
+                `<div>
+                     Nolan Catholic Highschool
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_c597237524343378fbdbd2a29c19efe9 = L.marker(
+                [32.84741, -97.47587],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_9e286603247ed905acd47b2d0dfd9ca4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_c597237524343378fbdbd2a29c19efe9.setIcon(icon_9e286603247ed905acd47b2d0dfd9ca4);
+        
+    
+        var popup_09dafc7609290b0d47a2d237700c2530 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_622ab13d2a50f7e02eba1f4d3d9f3e8e = $(`<div id="html_622ab13d2a50f7e02eba1f4d3d9f3e8e" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Fort Worth Nature Center</h4>             <img src="https://www.fwnaturecenter.org/wp-content/uploads/2020/07/Boardwalk.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Nature preserve and park.             </p>         </div>         </div>`)[0];
+                popup_09dafc7609290b0d47a2d237700c2530.setContent(html_622ab13d2a50f7e02eba1f4d3d9f3e8e);
+            
+        
+
+        marker_c597237524343378fbdbd2a29c19efe9.bindPopup(popup_09dafc7609290b0d47a2d237700c2530)
+        ;
+
+        
+    
+    
+            marker_c597237524343378fbdbd2a29c19efe9.bindTooltip(
+                `<div>
+                     Fort Worth Nature Center
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_8ac8c60950d56b9dfc42b4955c37d268 = L.marker(
+                [32.744568, -97.369322],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_bfc4c030e443786f8b6d594d73fd283b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "university", "iconColor": "white", "markerColor": "purple", "prefix": "fa"}
+            );
+            marker_8ac8c60950d56b9dfc42b4955c37d268.setIcon(icon_bfc4c030e443786f8b6d594d73fd283b);
+        
+    
+        var popup_50bea0299f14b624236345cb17eefa6a = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_0a339291777c85e9e7c63a89faa15dee = $(`<div id="html_0a339291777c85e9e7c63a89faa15dee" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Museum of Science and History</h4>             <img src="https://www.fwmuseum.org/wp-content/uploads/2022/03/IMG_0884.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Science and history musuem. Major focus on childhood education             </p>         </div>         </div>`)[0];
+                popup_50bea0299f14b624236345cb17eefa6a.setContent(html_0a339291777c85e9e7c63a89faa15dee);
+            
+        
+
+        marker_8ac8c60950d56b9dfc42b4955c37d268.bindPopup(popup_50bea0299f14b624236345cb17eefa6a)
+        ;
+
+        
+    
+    
+            marker_8ac8c60950d56b9dfc42b4955c37d268.bindTooltip(
+                `<div>
+                     Museum of Science and History
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_008c4c2f5d765f6f1837212373208a54 = L.marker(
+                [32.773604, -97.447381],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_db6ccf6bab74661ad0b3e5b0de2f8610 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "industry", "iconColor": "white", "markerColor": "gray", "prefix": "fa"}
+            );
+            marker_008c4c2f5d765f6f1837212373208a54.setIcon(icon_db6ccf6bab74661ad0b3e5b0de2f8610);
+        
+    
+        var popup_d8ce8a3098e0646109cc37ba7df42851 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_cc890ca1d71429350970a5a396da9791 = $(`<div id="html_cc890ca1d71429350970a5a396da9791" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Lockheed Martin</h4>             <img src="https://www.lockheedmartin.com/content/dam/lockheed-martin/aero/photo/F-35/MuralMasthead.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Manufacturer of military aircraft. Local plant assembles F-35 Lightning II. Major local employer             </p>         </div>         </div>`)[0];
+                popup_d8ce8a3098e0646109cc37ba7df42851.setContent(html_cc890ca1d71429350970a5a396da9791);
+            
+        
+
+        marker_008c4c2f5d765f6f1837212373208a54.bindPopup(popup_d8ce8a3098e0646109cc37ba7df42851)
+        ;
+
+        
+    
+    
+            marker_008c4c2f5d765f6f1837212373208a54.bindTooltip(
+                `<div>
+                     Lockheed Martin
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_433e20adf509b46f6fdc89d7291b0257 = L.marker(
+                [32.77547, -97.058829],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_189d0f255befdd1678d79a80fa9851bb = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "industry", "iconColor": "white", "markerColor": "gray", "prefix": "fa"}
+            );
+            marker_433e20adf509b46f6fdc89d7291b0257.setIcon(icon_189d0f255befdd1678d79a80fa9851bb);
+        
+    
+        var popup_5a8cdf84d2463c86cf46f4234dd693ae = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_f71dc7d00b0d0719d6a4c9569903cf5b = $(`<div id="html_f71dc7d00b0d0719d6a4c9569903cf5b" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Bell Helicopter</h4>             <img src="https://www.star-telegram.com/public/latest-news/vpeuge/picture297234329/alternates/FREE_768/377996-Bell%20V-280%20Valor-In%20Flight-2020-f6ebb2-original-1611939616.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Manufacturer of military and civilian rotorcraft.             </p>         </div>         </div>`)[0];
+                popup_5a8cdf84d2463c86cf46f4234dd693ae.setContent(html_f71dc7d00b0d0719d6a4c9569903cf5b);
+            
+        
+
+        marker_433e20adf509b46f6fdc89d7291b0257.bindPopup(popup_5a8cdf84d2463c86cf46f4234dd693ae)
+        ;
+
+        
+    
+    
+            marker_433e20adf509b46f6fdc89d7291b0257.bindTooltip(
+                `<div>
+                     Bell Helicopter
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_32eee21977d9f1a7a91918769f05b91f = L.marker(
+                [32.874798, -97.01453],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_9559249a60e1e5b0e49b9a016499a779 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "plane", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_32eee21977d9f1a7a91918769f05b91f.setIcon(icon_9559249a60e1e5b0e49b9a016499a779);
+        
+    
+        var popup_ba122177eafe1b78f92676c6cd393964 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_1166708e063e560b23a33d569b184dd5 = $(`<div id="html_1166708e063e560b23a33d569b184dd5" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">DFW International Airport</h4>             <img src="https://upgradedpoints.com/wp-content/uploads/2019/04/Dallas-Fort-Worth-International-Airport-Centurion-Lounge-Skylink-Signposting.jpg?auto=webp&disable=upscale&width=900&fit=cover"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Major international airport. 6th busiest in the world and 3rd busiest airport in the world for passenger traffic.Major hub of American Airlines. Fun architecture.             </p>         </div>         </div>`)[0];
+                popup_ba122177eafe1b78f92676c6cd393964.setContent(html_1166708e063e560b23a33d569b184dd5);
+            
+        
+
+        marker_32eee21977d9f1a7a91918769f05b91f.bindPopup(popup_ba122177eafe1b78f92676c6cd393964)
+        ;
+
+        
+    
+    
+            marker_32eee21977d9f1a7a91918769f05b91f.bindTooltip(
+                `<div>
+                     DFW International Airport
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_9ee444dff206821165a8f9357ae7760b = L.marker(
+                [32.749447, -97.343313],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_6424c39b3e38bcf3698eeca51e061052 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "home", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_9ee444dff206821165a8f9357ae7760b.setIcon(icon_6424c39b3e38bcf3698eeca51e061052);
+        
+    
+        var popup_6d559574e9e1c49c7c35d8f95a89fa27 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_1eed21c5a53dd553941409c3c8eb7554 = $(`<div id="html_1eed21c5a53dd553941409c3c8eb7554" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Trinity Terrace</h4>             <img src="https://www.carechanges.com/_next/image/?url=https%3A%2F%2Fmedia.carechanges.com%2Fcommunity_images%2F6055dac3-65ef-4206-a277-27bdd91fcc5c%2Ffamilyassets%2Fd.png%3Fformat%3Dauto%26width%3D696%26height%3D430&w=750&q=75"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Luxury retirement home. Notable aspect of Fort Worth Skyline. Surprisingly hosts some TCU Silverfrog classes.             </p>         </div>         </div>`)[0];
+                popup_6d559574e9e1c49c7c35d8f95a89fa27.setContent(html_1eed21c5a53dd553941409c3c8eb7554);
+            
+        
+
+        marker_9ee444dff206821165a8f9357ae7760b.bindPopup(popup_6d559574e9e1c49c7c35d8f95a89fa27)
+        ;
+
+        
+    
+    
+            marker_9ee444dff206821165a8f9357ae7760b.bindTooltip(
+                `<div>
+                     Trinity Terrace
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2aca8f23e6bc60093ab53f645f2afdc3 = L.marker(
+                [32.729842, -97.389193],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_21790e1fa872c87ce4e81dba7b8c54be = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "shopping-cart", "iconColor": "white", "markerColor": "beige", "prefix": "fa"}
+            );
+            marker_2aca8f23e6bc60093ab53f645f2afdc3.setIcon(icon_21790e1fa872c87ce4e81dba7b8c54be);
+        
+    
+        var popup_1b9e07a41a635381eb708b8a7cbd5405 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_a270031a485b955395a4138885c4756a = $(`<div id="html_a270031a485b955395a4138885c4756a" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Central Market</h4>             <img src="https://fortworthbusiness.com/media/2021/09/CentralMktcty.jpg"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Gourmet Grocery store. Host a full service kitchen, cooking schools, and catering services. Very fun interior - gets a bit crampt at times, but more interesting than the usual grocery store grid.             </p>         </div>         </div>`)[0];
+                popup_1b9e07a41a635381eb708b8a7cbd5405.setContent(html_a270031a485b955395a4138885c4756a);
+            
+        
+
+        marker_2aca8f23e6bc60093ab53f645f2afdc3.bindPopup(popup_1b9e07a41a635381eb708b8a7cbd5405)
+        ;
+
+        
+    
+    
+            marker_2aca8f23e6bc60093ab53f645f2afdc3.bindTooltip(
+                `<div>
+                     Central Market
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b49c776aca0ee896b5b59eb41acaf84b = L.marker(
+                [32.70741, -97.347171],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_a59ebfb6ab0d70ea33055283bc8ba51b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "gamepad", "iconColor": "white", "markerColor": "pink", "prefix": "fa"}
+            );
+            marker_b49c776aca0ee896b5b59eb41acaf84b.setIcon(icon_a59ebfb6ab0d70ea33055283bc8ba51b);
+        
+    
+        var popup_6b3cc402b8016d84c8b6f26244e6cf38 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_5f3d4e45a7fe7250538a4dfc40429bfe = $(`<div id="html_5f3d4e45a7fe7250538a4dfc40429bfe" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Cidercade</h4>             <img src="https://cidercade.com/wp-content/uploads/2023/05/FTW_Exterior_1-1.jpg.webp"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Modern arcade featuring unlimited plays (entry fee, but no token system). Family friendly by day, 18+ after 9pm. Hosts a cider and pizza restraunt.             </p>         </div>         </div>`)[0];
+                popup_6b3cc402b8016d84c8b6f26244e6cf38.setContent(html_5f3d4e45a7fe7250538a4dfc40429bfe);
+            
+        
+
+        marker_b49c776aca0ee896b5b59eb41acaf84b.bindPopup(popup_6b3cc402b8016d84c8b6f26244e6cf38)
+        ;
+
+        
+    
+    
+            marker_b49c776aca0ee896b5b59eb41acaf84b.bindTooltip(
+                `<div>
+                     Cidercade
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bb5b56caa59ea5069ebace6c18464b4d = L.marker(
+                [32.678969, -97.12457],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_f543427c671ae6ef45a075a3b5312641 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "shopping-cart", "iconColor": "white", "markerColor": "beige", "prefix": "fa"}
+            );
+            marker_bb5b56caa59ea5069ebace6c18464b4d.setIcon(icon_f543427c671ae6ef45a075a3b5312641);
+        
+    
+        var popup_692a2b0e4ac7540ffd8717fbe64bd95e = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_8fef0b0124d6744831ef4d355c2f46fd = $(`<div id="html_8fef0b0124d6744831ef4d355c2f46fd" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Hobbytown USA</h4>             <img src="https://htudallastx.com/wp-content/uploads/2022/03/dallas-hobbytown-crew.png"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 One of the few remaining brick and mortar hobby stores. Has an excellent collection of models, tools, paints, etc... Fun atmosphere and friendly staff.             </p>         </div>         </div>`)[0];
+                popup_692a2b0e4ac7540ffd8717fbe64bd95e.setContent(html_8fef0b0124d6744831ef4d355c2f46fd);
+            
+        
+
+        marker_bb5b56caa59ea5069ebace6c18464b4d.bindPopup(popup_692a2b0e4ac7540ffd8717fbe64bd95e)
+        ;
+
+        
+    
+    
+            marker_bb5b56caa59ea5069ebace6c18464b4d.bindTooltip(
+                `<div>
+                     Hobbytown USA
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_40f6af80edd60a0c5216a488c06c2952 = L.marker(
+                [32.34541, -97.383898],
+                {}
+            ).addTo(map_5c2fe0184111fcdf36a860eb9f42b1c8);
+        
+    
+            var icon_b05b8dc0a962e52d4d6b688c728bc3db = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "gamepad", "iconColor": "white", "markerColor": "pink", "prefix": "fa"}
+            );
+            marker_40f6af80edd60a0c5216a488c06c2952.setIcon(icon_b05b8dc0a962e52d4d6b688c728bc3db);
+        
+    
+        var popup_27ee2309168246bf407004a972c721b5 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_2e6400a6fbe97316b7047c55f3953918 = $(`<div id="html_2e6400a6fbe97316b7047c55f3953918" style="width: 100.0%; height: 100.0%;">         <div style="width: 300px; font-family: Arial, sans-serif;">             <h4 style="margin: 0 0 10px 0; color: #333;">Plaza Theatre Company at Dudley Hall</h4>             <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/15/80/78/plaza-stage-in-the-round.jpg?w=1000&h=-1&s=1"                   style="width: 100%; height: auto; margin-bottom: 10px; border-radius: 5px;"                  onerror="this.style.display='none'">             <p style="margin: 0; font-size: 12px; color: #666; line-height: 1.4;">                 Outside of Fort Worth, but hosts incredible performances. Excellent acting, singing, staging. Very small theatre-in-the-round, but the theatre group knows how to work with it well. Actually comfortable seats!             </p>         </div>         </div>`)[0];
+                popup_27ee2309168246bf407004a972c721b5.setContent(html_2e6400a6fbe97316b7047c55f3953918);
+            
+        
+
+        marker_40f6af80edd60a0c5216a488c06c2952.bindPopup(popup_27ee2309168246bf407004a972c721b5)
+        ;
+
+        
+    
+    
+            marker_40f6af80edd60a0c5216a488c06c2952.bindTooltip(
+                `<div>
+                     Plaza Theatre Company at Dudley Hall
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

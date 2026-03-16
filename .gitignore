@@ -28,6 +28,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Environment secrets
+.env
+.env.*
+!.env.example
+Lab6Map/mapbox_token.txt
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 
