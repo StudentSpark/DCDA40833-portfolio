@@ -40,8 +40,7 @@
 
     <main>
         <section>
-            <h2>Interactive Folium Map</h2>
-            <p>This map is generated from Python using Folium + Mapbox and embedded below.</p>
+            <h2>Interactive Mapbox Demonstration</h2>
             <iframe
                 class="map-frame"
                 src="Lab6Map/fort_worth_map.html"
@@ -49,11 +48,23 @@
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
             </iframe>
-            <p>
-                If the map does not load after updates, rerun <strong>Lab6Map/lab06.py</strong> to regenerate
-                <strong>Lab6Map/fort_worth_map.html</strong>.
-            </p>
         </section>
+        <section>
+            <h2>Reflection</h2>
+            
+            <p>
+                While interesting, this lab was difficult for me for several reasons. My largest issue was that I really struggled with Mapbox’s interface and systems. Despite reading several tutorials and combing through the interface, it was simply unintuitive and confusing to me. Eventually I was able to get a simple layout done, but it wasn’t anything I was exceptionally proud of. The website and tutorials claimed the program is capable of doing many intricate customizations (and it likely is) but the interface was so confusing I struggled to even get a basic template down. One of the weirdest features for me to work with was the difference between custom and background layers. Despite mostly containing the same information, features were split up between the two options, and were frequently packaged with extraneous information or were seemingly nonfunctional. For instance, I attempted to add simple contour lines to give my map depth, but instead it layered a solid-color plane over the entire map. I adjusted some settings and tried changing what layer it was on, but I was ultimately unable to get the feature functional.
+	Adding the interactable elements to the map was fairly straightforward, with the help of AI. While some of the more technical aspects are a bit blurry, the overall concept wasn’t too difficult to follow. Another difficulty I came across was the security issues of how mapbox handles its API keys / tokens. While the first and most prominent token Mapbox provides is the default all-access public key, it actually recommends using a customized locked-down version that only has read access. After setting this up and replacing the public key in my code, I feel it's safer to publish. I’m not sure how other intractable map-imbeds work, but it feels odd to put such sensitive information in such a prominent place. 
+	As for the map design, I tried to model it after the briefing maps from the game Ace Combat 7. I feel like I got the basic overall look, but some of the fancier details didn’t translate as well, such as the holographic layering or the colored shading (like what's seen on the mini-map in the top right).
+</p>
+        </section>
+    <section>
+        <h2>Map Design Inspiration</h2>
+        <p>The visual design of the map was based on the maps from the game Ace Combat 7, an example of which can be seen below.</p>
+        <figure>
+            <img src="images/ac7Image.webp" alt="Ace Combat 7 Map Example" width="800" style="display: block; margin-left: auto; margin-right: auto;">
+        </figure>
+    </section>
     </main>
 
     <footer>
