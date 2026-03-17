@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 class MapboxFoliumMap:
     """Class to create interactive maps with Mapbox styling and geocoding"""
     
+    """Initializes the map defines the rules. Stores the API key and defines a style dictionary. """
     def __init__(self, api_key, mapbox_style='mapbox/streets-v12'):
         """
         Initialize the map creator
@@ -65,6 +66,7 @@ class MapboxFoliumMap:
             "{z}/{x}/{y}@2x?access_token=" + self.api_key
         )
     
+    """ Uses Mapbox's Geocoding API to convert addresses to latitude and longitude coordinates. Caches results to reduce API calls."""
     def geocode_address(self, address):
         """
         Geocode an address using Mapbox Geocoding API
@@ -114,6 +116,7 @@ class MapboxFoliumMap:
             print(f"Error geocoding '{address}': {e}")
             return None
     
+    """ Creates HTML content for marker popups. Sets color and symbol based on the location type, and pops up a box with further information."""
     def create_popup_html(self, name, description, image_url):
         """
         Create HTML content for marker popup
@@ -161,7 +164,9 @@ class MapboxFoliumMap:
         default_style = {'color': 'darkblue', 'icon': 'info-sign', 'prefix': 'glyphicon'}
         return self.type_styles.get(location_type, default_style)
     
-    def create_map(self, csv_file, center=None, zoom_start=11, tile_url_template=None):
+""" Reads the CSV file, geocodes the address, averages the point locations ot make a center point to base the camera on, and then builds the folium map."""
+
+def create_map(self, csv_file, center=None, zoom_start=11, tile_url_template=None):
         """
         Create the interactive map from CSV data
         
@@ -267,7 +272,7 @@ class MapboxFoliumMap:
         print("\nMap created successfully!")
         return m
     
-    def save_map(self, map_obj, output_file='map.html'):
+def save_map(self, map_obj, output_file='map.html'):
         """
         Save the map to an HTML file
         
@@ -294,7 +299,7 @@ def load_mapbox_api_key(env_file='.env'):
         )
     return api_key
 
-
+"""Create a small Flask app that serves the HTML and proxies Mapbox tiles. This allows you to share the map without exposing your API key in the HTML. AI designed this one based on my request to hide the API key. Did not end up using this, instead made a restricted public key on Mapbox thats is read only."""
 def create_publish_app(html_file, api_key, mapbox_style='mapbox/streets-v12'):
     """Create a small Flask app that serves the HTML and proxies Mapbox tiles."""
     from flask import Flask, Response, abort, send_from_directory
