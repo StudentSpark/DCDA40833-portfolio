@@ -621,3 +621,105 @@ footer a:hover {
         page-break-inside: avoid;
     }
 }
+
+/* Custom Turquoise Button for Links */
+.turquoise-btn {
+    display: inline-block;
+    background-color: var(--secondary-color); /* Turquoise */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 188, 193, 0.2);
+}
+
+/* Dark mode overrides for the button */
+:root.dark-mode .turquoise-btn {
+    background-color: var(--secondary-color);
+    color: #0a1929;
+}
+
+:root.dark-mode .turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+}
+
+/* Custom Turquoise Button for Links */
+.turquoise-btn {
+    display: inline-block;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 188, 193, 0.2);
+}
+
+/* Dark mode overrides for the button */
+:root.dark-mode .turquoise-btn {
+    background-color: var(--secondary-color);
+    color: #0a1929;
+}
+
+:root.dark-mode .turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+}
+
+/* Custom Turquoise Button for Links */
+.turquoise-btn {
+    display: inline-block;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 188, 193, 0.2);
+}
+
+/* Dark mode overrides for the button */
+:root.dark-mode .turquoise-btn {
+    background-color: var(--secondary-color);
+    color: #0a1929;
+}
+
+:root.dark-mode .turquoise-btn:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+}
