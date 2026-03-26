@@ -384,6 +384,21 @@ p code, li code {
     margin-top: 0;
 }
 
+/* Use Prism's syntax theme colors when a language class is present. */
+pre[class*="language-"] {
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+/* Responsive map embed sizing for Lab 6 iframe. */
+.map-frame {
+    width: 100%;
+    height: clamp(360px, 65vh, 760px);
+    border: 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 /* =========================
    Data Tables
    ========================= */
@@ -605,6 +620,10 @@ footer a:hover {
 
     .viz-grid {
         grid-template-columns: 1fr;  /* Single column on mobile */
+    }
+
+    .map-frame {
+        height: 420px;
     }
 }
 
