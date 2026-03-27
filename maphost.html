@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization Critique | Your Name</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <!-- Navigation, dark mode toggle, and hamburger dropdown tag for mobile viewers-->
+        <nav>
+        <nav>
+            <button class="hamburger" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="lab02.html">AI Evaluation</a></li>
+                <li><a href="lab03.html">Tufte Critique</a></li>
+                <li><a href="lab04.html">Tableau Viz</a></li>
+                <li><a href="lab05.html">Vibe Coding Analysis</a></li>
+                <li><a href="lab06.html">Hometown Map</a></li>
+                <li><a href="labsynopsis.html">Lab Synopsis</a></li>
+                <li><a href="maphost.html">Orbit Visualization</a></li>
+            </ul>
+            <!-- Add more lab links as the semester progresses -->
+            <!-- AI-GENERATED: Dark mode toggle switch for visual comfort in low-light environments -->
+            <div class="dark-mode-toggle">
+                <span class="toggle-label">Dark Mode</span>
+                <label class="toggle-switch" aria-label="Toggle dark mode">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </nav>
+        <h1>Orbit Map</h1>
+    </header>
+
+    <main>
+    
+        <section id="live-satellite-viewer">
+            <h2>Live Satellite Viewer</h2>
+            <p>This embedded Cesium view runs from my local JSON catalog and supports long-duration, multi-group simulation.</p>
+            <iframe
+                src="CesiumMap/index.html"
+                title="Cesium Satellite Viewer"
+                width="100%"
+                height="760"
+                style="border: 1px solid #2a3f5f; border-radius: 12px; background: #081426;"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+            ></iframe>
+            <p>If the embed does not load, open it directly: <a href="CesiumMap/index.html">Open Satellite Viewer</a>.</p>
+            <p><strong>Note:</strong> This must be served via http/https (not file://) so JSON data can load correctly.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Stephen Park</p>
+    </footer>
+    
+    <script src="js/navigation.js"></script>
+</body>
+</html>
