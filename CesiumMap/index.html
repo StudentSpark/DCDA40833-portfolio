@@ -109,6 +109,16 @@
       color: var(--text);
     }
 
+    .controls select {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
     #groupSelect {
       width: 100%;
       margin-bottom: 10px;
@@ -174,6 +184,17 @@
       min-height: 1rem;
     }
 
+    #datasetIndicator {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #93c5fd;
+      min-height: 1rem;
+    }
+
+    #datasetIndicator.error {
+      color: #fca5a5;
+    }
+
     #status {
       margin-top: 8px;
       font-size: 0.8rem;
@@ -198,6 +219,28 @@
         Loads local JSON orbital elements, converts them into CZML samples with
         satellite.js, then renders the selected group in one Cesium CZML data source.
       </p>
+
+    <div class="controls">
+      <div>
+        <label for="datasetSelect">Dataset preset</label>
+        <select id="datasetSelect" aria-label="Dataset preset selector">
+          <option value="CURRENT">Current catalog (all launch years)</option>
+          <option value="PRE_1970">Launch-era view: 1960s and earlier</option>
+          <option value="PRE_1980">Launch-era view: through 1979</option>
+          <option value="PRE_2000">Launch-era view: through 1999</option>
+          <option value="RANGE_2000_2010">Modern launch-era view: 2000-2010</option>
+          <option value="POST_2010">Modern launch-era view: 2010-present</option>
+        </select>
+      </div>
+      <div>
+        <label for="globeStyleSelect">Globe style</label>
+        <select id="globeStyleSelect" aria-label="Globe style selector">
+          <option value="SATELLITE">Satellite imagery</option>
+          <option value="STREETS">Street map</option>
+          <option value="DARK">Dark no-basemap</option>
+        </select>
+      </div>
+    </div>
 
     <div class="controls">
       <div>
@@ -248,6 +291,7 @@
       <button id="loadBtn" type="button">Visualize Sattelites</button>
       <div id="groupNote"></div>
       <div id="sourceNote"></div>
+      <div id="datasetIndicator"></div>
       <div id="status">Waiting to load local satellite JSON data...</div>
     </div>
   </div>
@@ -257,6 +301,28 @@
   <script type="module">
     const controlPanel = document.getElementById('controlPanel');
     const panelToggleBtn = document.getElementById('panelToggleBtn');
+    const ION_TOKEN_FILE_PATH = './.token';
+
+    async function loadIonAccessToken() {
+      if (location.protocol === 'file:') {
+        throw new Error('This page cannot load .token via file://. Start a local web server and open CesiumMap/index.html through http://localhost.');
+      }
+
+      const response = await fetch(ION_TOKEN_FILE_PATH, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Failed to load ${ION_TOKEN_FILE_PATH}: ${response.status} ${response.statusText}`);
+      }
+
+      const token = (await response.text()).trim();
+      if (!token) {
+        throw new Error('The Cesium Ion token file is empty.');
+      }
+
+      return token;
+    }
+
+    Cesium.Ion.defaultAccessToken = await loadIonAccessToken();
+
     const viewer = new Cesium.Viewer('cesiumContainer', {
       terrainProvider: new Cesium.EllipsoidTerrainProvider(),
       animation: true,
@@ -274,6 +340,9 @@
     const statusElement = document.getElementById('status');
     const groupNoteElement = document.getElementById('groupNote');
     const sourceNoteElement = document.getElementById('sourceNote');
+    const datasetIndicatorElement = document.getElementById('datasetIndicator');
+    const datasetSelect = document.getElementById('datasetSelect');
+    const globeStyleSelect = document.getElementById('globeStyleSelect');
     const groupSelect = document.getElementById('groupSelect');
     const multiGroupSelect = document.getElementById('multiGroupSelect');
     const multiGroupMode = document.getElementById('multiGroupMode');
@@ -290,6 +359,8 @@
     let localCatalogPromise = null;
     let selectedGroup = 'ALL';
     let availableGroups = ['ALL'];
+    let selectedDatasetPreset = 'CURRENT';
+    let selectedGlobeStyle = 'SATELLITE';
 
     const APP_VERSION = 'local-json-v4';
     const DATA_FILE_PATH = './Sattelites.json';
@@ -319,6 +390,11 @@
     function setStatus(message, isError = false) {
       statusElement.textContent = message;
       statusElement.classList.toggle('error', isError);
+    }
+
+    function setDatasetIndicator(message, isError = false) {
+      datasetIndicatorElement.textContent = message;
+      datasetIndicatorElement.classList.toggle('error', isError);
     }
 
     function inferGroupFromName(name) {
@@ -359,6 +435,158 @@
       ) return 'ROCKET/DEBRIS';
 
       return 'OTHER';
+    }
+
+    function getLaunchYear(record) {
+      const objectId = String(record?.OBJECT_ID || '').trim();
+      const match = objectId.match(/^(\d{4})-/);
+      if (!match) {
+        return Number.POSITIVE_INFINITY;
+      }
+      const year = Number(match[1]);
+      return Number.isFinite(year) ? year : Number.POSITIVE_INFINITY;
+    }
+
+    function describeDatasetPreset(preset) {
+      if (preset === 'PRE_1970') return 'Launch-era approximation: 1960s and earlier';
+      if (preset === 'PRE_1980') return 'Launch-era approximation: through 1979';
+      if (preset === 'PRE_2000') return 'Launch-era approximation: through 1999';
+      if (preset === 'RANGE_2000_2010') return 'Launch-era approximation: 2000 through 2010';
+      if (preset === 'POST_2010') return 'Launch-era approximation: 2010 and newer';
+      return 'Current catalog (all launch years)';
+    }
+
+    function applyDatasetPreset(records, preset) {
+      if (preset === 'PRE_1970') {
+        return records.filter((record) => getLaunchYear(record) < 1970);
+      }
+      if (preset === 'PRE_1980') {
+        return records.filter((record) => getLaunchYear(record) < 1980);
+      }
+      if (preset === 'PRE_2000') {
+        return records.filter((record) => getLaunchYear(record) < 2000);
+      }
+      if (preset === 'RANGE_2000_2010') {
+        return records.filter((record) => {
+          const year = getLaunchYear(record);
+          return year >= 2000 && year <= 2010;
+        });
+      }
+      if (preset === 'POST_2010') {
+        return records.filter((record) => getLaunchYear(record) >= 2010);
+      }
+      return records;
+    }
+
+    function getDatasetPresetCounts(records) {
+      const presets = ['CURRENT', 'PRE_1970', 'PRE_1980', 'PRE_2000', 'RANGE_2000_2010', 'POST_2010'];
+      const counts = {};
+
+      presets.forEach((preset) => {
+        counts[preset] = applyDatasetPreset(records, preset).length;
+      });
+
+      return counts;
+    }
+
+    function getRepresentativeEpochDate(records, preset) {
+      const dates = records
+        .map((record) => {
+          try {
+            return parseEpochAsUtc(record.EPOCH);
+          } catch (error) {
+            return null;
+          }
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.getTime() - b.getTime());
+
+      if (!dates.length) {
+        return new Date();
+      }
+
+      if (preset === 'PRE_1970' || preset === 'PRE_1980' || preset === 'PRE_2000') {
+        // Historical "through year" presets are best visualized near the end of that era.
+        return dates[dates.length - 1];
+      }
+
+      return dates[Math.floor(dates.length / 2)];
+    }
+
+    async function zoomToOrFallback(dataSource) {
+      try {
+        const zoomed = await viewer.zoomTo(dataSource);
+        if (zoomed) {
+          return;
+        }
+      } catch (error) {
+        // Fallback below keeps the globe visible when zoom cannot resolve bounds.
+      }
+
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(-97.0, 28.5, 24000000)
+      });
+    }
+
+    function updateDatasetPresetLabels(records) {
+      const counts = getDatasetPresetCounts(records);
+      const labels = {
+        CURRENT: `Current catalog (all launch years) [${counts.CURRENT}]`,
+        PRE_1970: `Launch-era view: 1960s and earlier [${counts.PRE_1970}]`,
+        PRE_1980: `Launch-era view: through 1979 [${counts.PRE_1980}]`,
+        PRE_2000: `Launch-era view: through 1999 [${counts.PRE_2000}]`,
+        RANGE_2000_2010: `Modern launch-era view: 2000-2010 [${counts.RANGE_2000_2010}]`,
+        POST_2010: `Modern launch-era view: 2010-present [${counts.POST_2010}]`
+      };
+
+      Array.from(datasetSelect.options).forEach((option) => {
+        option.textContent = labels[option.value] || option.textContent;
+      });
+    }
+
+    async function ensureVisibleGlobe(style) {
+      if (style === 'DARK') {
+        viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0b1220');
+        return;
+      }
+
+      if (viewer.imageryLayers.length > 0) {
+        return;
+      }
+
+      try {
+        const fallbackImagery = await Cesium.ArcGisMapServerImageryProvider.fromUrl(
+          'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+        );
+        viewer.imageryLayers.addImageryProvider(fallbackImagery);
+      } catch (error) {
+        viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#1f2937');
+      }
+    }
+
+    async function applyGlobeStyle(style) {
+      viewer.imageryLayers.removeAll(true);
+
+      if (style === 'DARK') {
+        viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#030712');
+        return;
+      }
+
+      viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+
+      if (style === 'STREETS') {
+        const osm = new Cesium.OpenStreetMapImageryProvider({
+          url: 'https://tile.openstreetmap.org/'
+        });
+        viewer.imageryLayers.addImageryProvider(osm);
+        return;
+      }
+
+      const satelliteImagery = await Cesium.ArcGisMapServerImageryProvider.fromUrl(
+        'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+      );
+      viewer.imageryLayers.addImageryProvider(satelliteImagery);
+      await ensureVisibleGlobe(style);
     }
 
     function applyGroupFilter(records) {
@@ -769,24 +997,29 @@
       } = options;
 
       const allSatellites = await getLocalSatelliteCatalog();
+      const presetFilteredSatellites = applyDatasetPreset(allSatellites, selectedDatasetPreset);
 
-      const hasNativeCategory = allSatellites.some((record) =>
+      if (!presetFilteredSatellites.length) {
+        throw new Error(`Dataset preset "${describeDatasetPreset(selectedDatasetPreset)}" returned no records.`);
+      }
+
+      const hasNativeCategory = presetFilteredSatellites.some((record) =>
         Object.prototype.hasOwnProperty.call(record, 'GROUP') ||
         Object.prototype.hasOwnProperty.call(record, 'CATEGORY')
       );
 
       groupNoteElement.textContent = hasNativeCategory
         ? 'Local JSON appears to include native category fields.'
-        : 'Local JSON is not natively categorized. Dropdown groups are inferred from OBJECT_NAME.';
+        : `${describeDatasetPreset(selectedDatasetPreset)}. Groups are inferred from OBJECT_NAME.`;
 
       let filtered = [];
       let selected = [];
 
       if (multiMode && selectedMultiGroups.length > 0) {
-        filtered = allSatellites.filter((record) => selectedMultiGroups.includes(inferGroupFromName(record.OBJECT_NAME)));
-        selected = selectAcrossGroups(allSatellites, selectedMultiGroups, perGroupCount, maxCount);
+        filtered = presetFilteredSatellites.filter((record) => selectedMultiGroups.includes(inferGroupFromName(record.OBJECT_NAME)));
+        selected = selectAcrossGroups(presetFilteredSatellites, selectedMultiGroups, perGroupCount, maxCount);
       } else {
-        filtered = applyGroupFilter(allSatellites);
+        filtered = applyGroupFilter(presetFilteredSatellites);
         selected = filtered
           .slice()
           .sort((a, b) => String(a.OBJECT_NAME || '').localeCompare(String(b.OBJECT_NAME || '')))
@@ -798,7 +1031,8 @@
         throw new Error(`No satellites matched the selected group(s): ${groupDescription}.`);
       }
 
-      const start = Cesium.JulianDate.now();
+      const referenceDate = getRepresentativeEpochDate(selected, selectedDatasetPreset);
+      const start = Cesium.JulianDate.fromDate(referenceDate);
       const stop = Cesium.JulianDate.addMinutes(start, durationMinutes, new Cesium.JulianDate());
       const startIso = Cesium.JulianDate.toIso8601(start);
       const stopIso = Cesium.JulianDate.toIso8601(stop);
@@ -831,7 +1065,7 @@
         }
       ];
 
-      setStatus(`Propagating ${selected.length} satellites with satellite.js...`);
+      setStatus(`Propagating ${selected.length} satellites near ${referenceDate.toISOString()} with satellite.js...`);
 
       let skipped = 0;
       for (let i = 0; i < selected.length; i += 1) {
@@ -869,6 +1103,7 @@
       return {
         czml,
         totalFetched: allSatellites.length,
+        totalPreset: presetFilteredSatellites.length,
         totalFiltered: filtered.length,
         totalUsed: selected.length,
         totalVisualized: czml.length - 1,
@@ -933,19 +1168,25 @@
         setStatus('Loading CZML into Cesium...');
         activeSatelliteSource = await Cesium.CzmlDataSource.load(result.czml);
         viewer.dataSources.add(activeSatelliteSource);
-        await viewer.zoomTo(activeSatelliteSource);
+        await zoomToOrFallback(activeSatelliteSource);
 
         setStatus(
           `Rendered ${result.totalVisualized} satellites for ${multiMode ? 'multiple groups' : selectedGroup} ` +
-          `(catalog ${result.totalFetched}, group match ${result.totalFiltered}, selected ${result.totalUsed}, skipped ${result.totalSkipped}, ` +
+          `(catalog ${result.totalFetched}, preset ${result.totalPreset}, group match ${result.totalFiltered}, selected ${result.totalUsed}, skipped ${result.totalSkipped}, ` +
           `step ${result.effectiveStepSeconds.toFixed(1)}s, samples/sat ${result.maxSamplesPerSatellite}, clock x${result.clockMultiplier}, ` +
-          `mode ${result.enduranceMode ? 'endurance' : 'standard'}, source ${DATA_FILE_PATH}).`
+          `mode ${result.enduranceMode ? 'endurance' : 'standard'}, dataset "${describeDatasetPreset(selectedDatasetPreset)}", source ${DATA_FILE_PATH}, ` +
+          `epoch ${referenceDate.toISOString()}).`
         );
 
-        sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Version: ${APP_VERSION} | Loaded: ${new Date().toLocaleTimeString()}`;
+        setDatasetIndicator(
+          `Active dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Matching records: ${result.totalPreset} | Epoch: ${referenceDate.toISOString()} | Updated: ${new Date().toLocaleTimeString()}`
+        );
+
+        sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Globe: ${selectedGlobeStyle} | Version: ${APP_VERSION} | Epoch: ${referenceDate.toISOString()} | Loaded: ${new Date().toLocaleTimeString()}`;
       } catch (error) {
         console.error(error);
         setStatus(`Error: ${error.message}`, true);
+        setDatasetIndicator(`Dataset update failed: ${error.message}`, true);
       } finally {
         loadBtn.disabled = false;
       }
@@ -958,13 +1199,18 @@
     async function initializeUi() {
       try {
         const catalog = await getLocalSatelliteCatalog();
-        populateGroupSelect(catalog);
+        updateDatasetPresetLabels(catalog);
+        const presetCatalog = applyDatasetPreset(catalog, selectedDatasetPreset);
+        populateGroupSelect(presetCatalog);
+        await applyGlobeStyle(selectedGlobeStyle);
         setStatus(`Loaded local catalog from ${DATA_FILE_PATH}. Choose a group, then visualize.`);
-        sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Version: ${APP_VERSION}`;
+        sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Globe: ${selectedGlobeStyle} | Version: ${APP_VERSION}`;
+        setDatasetIndicator(`Active dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Initializing...`);
         await loadSatelliteVisualization();
       } catch (error) {
         console.error(error);
         setStatus(`Initialization error: ${error.message}`, true);
+        setDatasetIndicator(`Initialization failed: ${error.message}`, true);
       }
     }
 
@@ -974,6 +1220,33 @@
     });
     multiGroupMode.addEventListener('change', () => {
       loadSatelliteVisualization();
+    });
+    datasetSelect.addEventListener('change', async () => {
+      selectedDatasetPreset = datasetSelect.value;
+      selectedGroup = 'ALL';
+      const catalog = await getLocalSatelliteCatalog();
+      updateDatasetPresetLabels(catalog);
+      const presetCatalog = applyDatasetPreset(catalog, selectedDatasetPreset);
+
+      setDatasetIndicator(
+        `Applying dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Matching records: ${presetCatalog.length} | Updated: ${new Date().toLocaleTimeString()}`
+      );
+
+      if (!presetCatalog.length) {
+        setStatus(`No records found for dataset: ${describeDatasetPreset(selectedDatasetPreset)}.`, true);
+        setDatasetIndicator(`No records found for dataset: ${describeDatasetPreset(selectedDatasetPreset)}.`, true);
+        await ensureVisibleGlobe(selectedGlobeStyle);
+        return;
+      }
+
+      populateGroupSelect(presetCatalog);
+      await loadSatelliteVisualization();
+      await ensureVisibleGlobe(selectedGlobeStyle);
+    });
+    globeStyleSelect.addEventListener('change', async () => {
+      selectedGlobeStyle = globeStyleSelect.value;
+      await applyGlobeStyle(selectedGlobeStyle);
+      await loadSatelliteVisualization();
     });
     multiGroupSelect.addEventListener('change', () => {
       if (multiGroupMode.checked) {
@@ -996,5 +1269,5 @@
     // 4) For very large catalogs, increase stepSeconds or reduce durationMinutes.
     // 5) To keep this local-only, maintain DATA_FILE_PATH and JSON conversion pipeline.
   </script>
-</body>
+  </body>
 </html>
