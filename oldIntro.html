@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Debris Research - Introduction</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #16213e 50%, #0f3460 100%);
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Animated background stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 10;
+      background: rgba(10, 14, 39, 0.95);
+      border-bottom: 2px solid #00d4ff;
+      padding: 1.5rem 0;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00d4ff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #b0b0b0;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      text-transform: capitalize;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: #00d4ff;
+      border-bottom-color: #00d4ff;
+      text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+    }
+
+    /* Main content */
+    main {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #00d4ff 0%, #00ff88 50%, #00d4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .hero-subtitle {
+      font-size: 1.4rem;
+      color: #00ff88;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Content card */
+    .content-card {
+      background: rgba(22, 33, 62, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 3rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+      animation: slideIn 0.8s ease 0.4s both;
+      line-height: 1.8;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content-card h2 {
+      color: #00d4ff;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      padding-bottom: 1rem;
+    }
+
+    .content-card p {
+      margin-bottom: 1.5rem;
+      color: #d0d0d0;
+      font-size: 1.05rem;
+    }
+
+    .content-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: #00ff88;
+      font-weight: 600;
+    }
+
+    /* Accent line */
+    .accent-line {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #00d4ff, #00ff88);
+      margin: 2rem auto;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    /* Navigation buttons section */
+    .nav-section {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .nav-section h3 {
+      text-align: center;
+      color: #00d4ff;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem 1.5rem;
+      text-decoration: none;
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid #00d4ff;
+      border-radius: 8px;
+      color: #00d4ff;
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.1);
+    }
+
+    .nav-button:hover {
+      background: rgba(0, 212, 255, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+      transform: translateY(-3px);
+      color: #00ff88;
+      border-color: #00ff88;
+    }
+
+    .nav-button:active {
+      transform: translateY(-1px);
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 10;
+      background: rgba(10, 14, 39, 0.95);
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      color: #808080;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .content-card {
+        padding: 2rem;
+      }
+
+      .content-card h2 {
+        font-size: 1.5rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.85rem;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .content-card {
+        padding: 1.5rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Starfield background -->
+  <div class="stars" id="starfield"></div>
+
+  <!-- Header with navigation -->
+  <header>
+    <div class="header-container">
+      <div class="logo">⟐ Orbital Debris</div>
+      <nav>
+        <a href="intro.html" class="active">Introduction</a>
+        <a href="methods.html">Methods</a>
+        <a href="findings.html">Findings</a>
+        <a href="literature.html">Literature</a>
+        <a href="conclusion.html">Conclusion</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <div class="container">
+      <!-- Hero section -->
+      <div class="hero">
+        <h1>Orbital Debris & Space Clutter</h1>
+        <div class="hero-subtitle">Understanding the Growing Threat to Earth Orbit</div>
+        <div class="accent-line"></div>
+      </div>
+
+      <!-- Content card -->
+      <div class="content-card">
+        <h2>Research Overview</h2>
+        <p>
+          Orbital debris represents one of the most pressing challenges facing modern spacefaring nations and commercial space operations. As humanity continues to expand its presence in Earth orbit, the accumulation of defunct satellites, spent rocket stages, and fragmentation debris has created an increasingly hazardous environment.
+        </p>
+        <p>
+          This research project examines the <span class="highlight">distribution, characterization, and impact</span> of orbital debris across multiple altitude regimes. Through comprehensive analysis of historical and contemporary satellite catalogs, we investigate the dynamics of space clutter and its implications for current and future orbital missions.
+        </p>
+        <p>
+          The <span class="highlight">Kessler Syndrome</span>—a theoretical cascade of collisions that could render certain orbits unusable for generations—makes this research not merely academic, but critical to the sustainable use of space. Our findings contribute to a deeper understanding of debris mitigation strategies and collision avoidance protocols.
+        </p>
+        <p>
+          Explore this research through the sections below to discover our methodology, key findings, supporting literature, and conclusions about the future of orbital sustainability.
+        </p>
+
+        <!-- Navigation buttons -->
+        <div class="nav-section">
+          <h3>Research Sections</h3>
+          <div class="button-grid">
+            <a href="methods.html" class="nav-button">Methods</a>
+            <a href="findings.html" class="nav-button">Findings</a>
+            <a href="literature.html" class="nav-button">Literature</a>
+            <a href="conclusion.html" class="nav-button">Conclusion</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Orbital Debris Research Project. All rights reserved.</p>
+  </footer>
+
+  <!-- Starfield script -->
+  <script>
+    function generateStarfield() {
+      const starfield = document.getElementById('starfield');
+      const starCount = Math.min(window.innerWidth / 15, 100);
+
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.width = Math.random() * 2 + 0.5 + 'px';
+        star.style.height = star.style.width;
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starfield.appendChild(star);
+      }
+    }
+
+    // Generate starfield on load
+    generateStarfield();
+
+    // Regenerate on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        document.getElementById('starfield').innerHTML = '';
+        generateStarfield();
+      }, 250);
+    });
+  </script>
+</body>
+</html>

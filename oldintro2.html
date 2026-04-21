@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Debris Research | Ship Interface Intro</title>
+  <style>
+    :root {
+      --void: #04070b;
+      --panel: #0f141a;
+      --panel-deep: #090d11;
+      --panel-lit: #171e24;
+      --steel: #525c66;
+      --steel-hi: #8d98a2;
+      --steel-lo: #222930;
+      --amber: #ffbf3f;
+      --cyan: #67dbff;
+      --lime: #b6ff6a;
+      --text: #e7eef8;
+      --muted: #a1b0c2;
+      --danger: #ff6e6e;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.62);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.06), transparent 18%),
+        radial-gradient(circle at 18% 24%, rgba(103, 219, 255, 0.08), transparent 22%),
+        linear-gradient(180deg, #020407 0%, #060a0f 38%, #020304 100%);
+      color: var(--text);
+      font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      padding: 18px;
+    }
+
+    body.grid-on::before {
+      opacity: 0.28;
+      background-size: 34px 34px;
+    }
+
+    body.compact-mode {
+      padding: 10px;
+    }
+
+    body.compact-mode .shell {
+      width: min(1360px, 100%);
+      padding: 12px;
+    }
+
+    body.compact-mode .stage {
+      gap: 12px;
+    }
+
+    body.compact-mode .screen,
+    body.compact-mode .control-stack,
+    body.compact-mode .content-panel {
+      border-radius: 14px;
+    }
+
+    body.console-lights .status-light {
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(103, 219, 255, 0.8);
+    }
+
+    body.console-lights .indicator strong,
+    body.console-lights .section-card h2 {
+      color: var(--cyan);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1450px, 100%);
+      margin: 0 auto;
+      border-radius: 28px;
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(161, 176, 194, 0.16), rgba(15, 18, 22, 0.2)),
+        linear-gradient(180deg, #1b232b, #0c1015);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.5),
+        0 30px 90px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 22px;
+      border: 2px solid rgba(255,255,255,0.07);
+      pointer-events: none;
+    }
+
+    .shell::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.03);
+      pointer-events: none;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 6px 6px 14px;
+    }
+
+    .panel-id {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .badge {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #f2f4f7;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.08)),
+        linear-gradient(135deg, #414a53, #151a20);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.14),
+        inset 0 -8px 16px rgba(0,0,0,0.22),
+        0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    .panel-title {
+      min-width: 0;
+    }
+
+    .panel-title .eyebrow {
+      display: block;
+      color: var(--lime);
+      font-size: 0.7rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .panel-title .name {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.18));
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .status-light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 12px rgba(182, 255, 106, 0.8);
+    }
+
+    .stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+      gap: 16px;
+      align-items: stretch;
+      padding: 10px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2)),
+        linear-gradient(180deg, #11161c, #090c10);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .screen,
+    .control-stack,
+    .content-panel {
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(20, 26, 32, 0.96), rgba(8, 11, 14, 0.98));
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        inset 0 -18px 40px rgba(0,0,0,0.32),
+        var(--shadow);
+      overflow: hidden;
+    }
+
+    .screen {
+      position: relative;
+      padding: clamp(20px, 3vw, 34px);
+      min-height: 440px;
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+
+    .screen-visuals {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .screen-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(103, 219, 255, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(103, 219, 255, 0.18) 1px, transparent 1px);
+      background-size: 64px 64px;
+      opacity: 0;
+      transition: opacity 180ms ease;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.94), rgba(0,0,0,0.35));
+    }
+
+    .screen-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(182,255,106,0.08), transparent);
+      opacity: 0;
+      transform: translateY(-120%);
+      animation: sweep 8s linear infinite;
+      mix-blend-mode: screen;
+    }
+
+    body.grid-on .screen-grid {
+      opacity: 0.55;
+    }
+
+    body.scan-on .screen-scan {
+      opacity: 1;
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(103, 219, 255, 0.15);
+      pointer-events: none;
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: auto 16px 16px 16px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(103,219,255,0.06), rgba(182,255,106,0.04), rgba(255,191,63,0.06));
+      pointer-events: none;
+    }
+
+    .screen > :not(.screen-visuals) {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes sweep {
+      from { transform: translateY(-120%); }
+      to { transform: translateY(120%); }
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .screen-header h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-size: clamp(2.6rem, 5.8vw, 5.6rem);
+      line-height: 0.93;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+    }
+
+    .screen-meta {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-width: 180px;
+    }
+
+    .meter {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.18));
+      color: var(--muted);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .meter strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--text);
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+
+    .lead {
+      max-width: 64ch;
+      color: #d3deeb;
+      font-size: 1.04rem;
+      line-height: 1.85;
+      margin: 0 0 16px;
+    }
+
+    .lead strong {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .nav-chip-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .nav-chip {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: #eff4fb;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.18));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 10px 18px rgba(0,0,0,0.24);
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .nav-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(103, 219, 255, 0.35);
+      background: linear-gradient(180deg, rgba(103,219,255,0.08), rgba(0,0,0,0.18));
+    }
+
+    .nav-chip::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--lime) 32%, #5da53c 72%);
+      box-shadow: 0 0 10px rgba(182, 255, 106, 0.55);
+      flex: 0 0 auto;
+    }
+
+    .nav-chip span {
+      line-height: 1.1;
+    }
+
+    .switch-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px;
+      margin-top: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.18));
+    }
+
+    .switch-group {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.14));
+    }
+
+    .switch-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    .toggle-row .text {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .toggle-row .text strong {
+      color: var(--text);
+      font-size: 0.98rem;
+      letter-spacing: 0.03em;
+      font-weight: 650;
+    }
+
+    .toggle-row .text span {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .toggle {
+      appearance: none;
+      position: relative;
+      width: 66px;
+      height: 30px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, #4a545c, #20262c);
+      box-shadow:
+        inset 0 2px 4px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+      cursor: pointer;
+    }
+
+    .toggle:focus-visible,
+    .nav-chip:focus-visible,
+    .section-link:focus-visible {
+      outline: 2px solid rgba(103, 219, 255, 0.7);
+      outline-offset: 3px;
+    }
+
+    .toggle::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.5) 35%, rgba(255,255,255,0.15) 60%, rgba(0,0,0,0.08) 100%),
+        linear-gradient(180deg, #f7f8fa, #a7b1ba);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+      transition: left 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .toggle.on {
+      background: linear-gradient(180deg, #1b6f76, #10363c);
+      box-shadow:
+        inset 0 2px 4px rgba(0,0,0,0.45),
+        inset 0 0 18px rgba(103, 219, 255, 0.18);
+    }
+
+    .toggle.on::before {
+      left: 40px;
+      box-shadow: 0 0 14px rgba(103, 219, 255, 0.45), 0 3px 8px rgba(0,0,0,0.45);
+    }
+
+    .toggle.off {
+      background: linear-gradient(180deg, #4a545c, #20262c);
+    }
+
+    .toggle.off::before {
+      left: 4px;
+    }
+
+    .control-stack {
+      position: relative;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .section-card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.14));
+      padding: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .section-card h2 {
+      margin: 0 0 6px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--amber);
+    }
+
+    .section-card p {
+      margin: 0;
+      color: #d3deeb;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .indicator-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .indicator {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.16));
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .indicator strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      font-size: 0.9rem;
+      text-transform: none;
+    }
+
+    .content-panel {
+      margin-top: 16px;
+      padding: clamp(18px, 2.8vw, 26px);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .copy h2 {
+      margin: 0 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.84rem;
+      color: var(--cyan);
+    }
+
+    .copy p {
+      margin: 0 0 14px;
+      color: #d7e1ef;
+      line-height: 1.86;
+      font-size: 1.01rem;
+    }
+
+    .copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout {
+      margin: 14px 0;
+      padding: 14px 14px 14px 16px;
+      border-left: 3px solid var(--lime);
+      background: rgba(182, 255, 106, 0.06);
+      color: #f1f8d8;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .section-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .section-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      padding: 14px 14px 14px 16px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.16));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .section-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(103, 219, 255, 0.3);
+      background: linear-gradient(180deg, rgba(103,219,255,0.07), rgba(0,0,0,0.16));
+    }
+
+    .section-link .left {
+      display: grid;
+      gap: 4px;
+    }
+
+    .section-link .name {
+      font-size: 0.95rem;
+      font-weight: 650;
+      letter-spacing: 0.03em;
+    }
+
+    .section-link .desc {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .section-link .arrow {
+      color: var(--lime);
+      font-size: 1.2rem;
+      flex: 0 0 auto;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 6px 4px 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-row .pulse {
+      color: var(--amber);
+    }
+
+    @media (max-width: 1060px) {
+      .stage,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screen-header {
+        flex-direction: column;
+      }
+
+      .screen-meta {
+        min-width: 0;
+      }
+
+      .nav-chip-row {
+        grid-template-columns: 1fr;
+      }
+
+      .switch-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .indicator-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 10px;
+      }
+
+      .shell {
+        padding: 10px;
+        border-radius: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .status-strip {
+        justify-content: flex-start;
+      }
+
+      .screen,
+      .control-stack,
+      .content-panel {
+        border-radius: 16px;
+      }
+
+      .screen {
+        min-height: 0;
+      }
+
+      .footer-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="panel-id">
+        <div class="badge">OD</div>
+        <div class="panel-title">
+          <span class="eyebrow">Ground Station Interface</span>
+          <span class="name">Orbital Debris / Clutter Research Console</span>
+        </div>
+      </div>
+      <div class="status-strip">
+        <div class="status-pill"><span class="status-light"></span> Power nominal</div>
+        <div class="status-pill"><span class="status-light"></span> Orbit feed live</div>
+        <div class="status-pill"><span class="status-light"></span> Local analysis mode</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="stage">
+        <article class="screen">
+          <div class="screen-visuals" aria-hidden="true">
+            <div class="screen-grid"></div>
+            <div class="screen-scan"></div>
+          </div>
+          <div class="screen-header">
+            <div>
+              <h1>Human debris in a crowded sky</h1>
+              <p class="lead">
+                Earth orbit has become an operational environment wrapped in layers of legacy launches, fragmentation events,
+                and mission remnants. This project studies orbital debris and clutter as a systems problem, combining
+                catalog analysis with a clear view of where the risk concentrates.
+              </p>
+            </div>
+            <div class="screen-meta" aria-label="mission metrics">
+              <div class="meter">Mode<strong>Shipboard display</strong></div>
+              <div class="meter">Scope<strong>Catalog-driven study</strong></div>
+              <div class="meter">State<strong>Interface ready</strong></div>
+            </div>
+          </div>
+
+          <div class="nav-chip-row" aria-label="section shortcuts">
+            <a class="nav-chip" href="methods.html"><span>Methods</span></a>
+            <a class="nav-chip" href="findings.html"><span>Findings</span></a>
+            <a class="nav-chip" href="literature.html"><span>Literature</span></a>
+          </div>
+
+          <div class="switch-panel" aria-label="system controls">
+            <div class="switch-group">
+              <div class="switch-label">Display controls</div>
+              <div class="toggle-row">
+                <div class="text">
+                  <strong>Grid overlay</strong>
+                  <span>Show the ship-frame reference grid</span>
+                </div>
+                <button class="toggle on" type="button" data-toggle="grid" aria-pressed="true" aria-label="Toggle grid overlay"></button>
+              </div>
+              <div class="toggle-row">
+                <div class="text">
+                  <strong>Scanline sweep</strong>
+                  <span>Drive the moving console sweep</span>
+                </div>
+                <button class="toggle on" type="button" data-toggle="scan" aria-pressed="true" aria-label="Toggle scanline sweep"></button>
+              </div>
+            </div>
+
+            <div class="switch-group">
+              <div class="switch-label">Mission modes</div>
+              <div class="toggle-row">
+                <div class="text">
+                  <strong>Console lights</strong>
+                  <span>Shift the accents to a blue station hue</span>
+                </div>
+                <button class="toggle on" type="button" data-toggle="lights" aria-pressed="true" aria-label="Toggle console lights"></button>
+              </div>
+              <div class="toggle-row">
+                <div class="text">
+                  <strong>Compact layout</strong>
+                  <span>Reduce spacing for a denser console view</span>
+                </div>
+                <button class="toggle off" type="button" data-toggle="compact" aria-pressed="false" aria-label="Toggle compact layout"></button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="control-stack">
+          <div class="section-card">
+            <h2>Mission Summary</h2>
+            <p>
+              Orbital debris is not just clutter; it is the residue of decades of human activity in space, and it changes
+              how every future launch, maneuver, and station-keeping action is planned.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <h2>Research Aim</h2>
+            <p>
+              This study quantifies where the debris burden is growing, how it varies across orbital regimes, and which
+              trends point to the greatest collision and sustainability concerns.
+            </p>
+          </div>
+
+          <div class="indicator-row" aria-label="system indicators">
+            <div class="indicator">Orbit<strong>LEO</strong></div>
+            <div class="indicator">Signal<strong>Tracked</strong></div>
+            <div class="indicator">Risk<strong>Active</strong></div>
+          </div>
+
+          <div class="section-card">
+            <h2>Navigation</h2>
+            <p>
+              Use the links below to move through the rest of the research narrative.
+            </p>
+          </div>
+
+          <a class="section-link" href="conclusion.html">
+            <span class="left">
+              <span class="name">Conclusion</span>
+              <span class="desc">Implications and next steps</span>
+            </span>
+            <span class="arrow">→</span>
+          </a>
+        </aside>
+      </section>
+
+      <section class="content-panel">
+        <div class="content-grid">
+          <div class="copy">
+            <h2>Introduction</h2>
+            <p>
+              Orbital debris is a cumulative artifact of the space age: dead satellites, spent launch stages, mission
+              fragments, and untracked clutter that persists long after the original mission ends. At orbital speeds, even
+              tiny objects carry enough energy to threaten active systems.
+            </p>
+            <p>
+              The result is an environment that behaves less like empty space and more like contested infrastructure. This
+              research treats debris as a measurable operational constraint, asking how it evolves, where it concentrates,
+              and what its trajectory implies for the future of space access.
+            </p>
+            <div class="callout">
+              Near-future operations depend on clean situational awareness. Understanding clutter is part of keeping orbit usable.
+            </div>
+            <p>
+              The sections linked here provide the method, evidence, literature context, and conclusions needed to frame the
+              problem clearly and communicate its significance.
+            </p>
+          </div>
+
+          <div class="section-list" aria-label="section links">
+            <a class="section-link" href="methods.html">
+              <span class="left">
+                <span class="name">Methods</span>
+                <span class="desc">Data sources and analysis workflow</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="section-link" href="findings.html">
+              <span class="left">
+                <span class="name">Findings</span>
+                <span class="desc">Observed patterns and results</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="section-link" href="literature.html">
+              <span class="left">
+                <span class="name">Literature</span>
+                <span class="desc">Technical background and prior work</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="section-link" href="conclusion.html">
+              <span class="left">
+                <span class="name">Conclusion</span>
+                <span class="desc">Takeaways and future directions</span>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-row">
+          <div>Interface skin: metallic console</div>
+          <div class="pulse">System pulse: stable</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const body = document.body;
+
+    function setToggleState(button, enabled) {
+      button.classList.toggle('on', enabled);
+      button.classList.toggle('off', !enabled);
+      button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    }
+
+    function syncConsoleModes() {
+      const toggles = Array.from(document.querySelectorAll('.toggle[data-toggle]'));
+
+      body.classList.remove('grid-on', 'scan-on', 'console-lights', 'compact-mode');
+
+      toggles.forEach((button) => {
+        const mode = button.dataset.toggle;
+        const enabled = button.classList.contains('on');
+
+        if (mode === 'grid') {
+          body.classList.toggle('grid-on', enabled);
+        } else if (mode === 'scan') {
+          body.classList.toggle('scan-on', enabled);
+        } else if (mode === 'lights') {
+          body.classList.toggle('console-lights', enabled);
+        } else if (mode === 'compact') {
+          body.classList.toggle('compact-mode', enabled);
+        }
+      });
+    }
+
+    function attachToggleBehavior() {
+      const toggles = document.querySelectorAll('.toggle[data-toggle]');
+      toggles.forEach((button) => {
+        button.addEventListener('click', () => {
+          const enabled = !button.classList.contains('on');
+          setToggleState(button, enabled);
+          syncConsoleModes();
+        });
+      });
+
+      syncConsoleModes();
+    }
+
+    function createStars() {
+      const starfield = document.getElementById('starfield');
+      const count = Math.min(160, Math.max(80, Math.floor(window.innerWidth / 14)));
+      const fragment = document.createDocumentFragment();
+
+      for (let i = 0; i < count; i += 1) {
+        const star = document.createElement('span');
+        const size = Math.random() * 2.1 + 0.5;
+        star.className = 'star';
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${2.5 + Math.random() * 3.5}s`;
+        fragment.appendChild(star);
+      }
+
+      starfield.replaceChildren(fragment);
+    }
+
+    attachToggleBehavior();
+    createStars();
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(createStars, 160);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Debris Research | Intro Alt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #0e1217;
+      --bg-1: #161d26;
+      --bg-2: #222c37;
+      --plate: #2a3543;
+      --plate-edge: #465365;
+      --ink: #e9edf3;
+      --muted: #aebac8;
+      --signal: #84f0ff;
+      --warn: #ffb36a;
+      --ok: #9ff18f;
+      --danger: #ff8f8f;
+      --shadow-heavy: 0 18px 35px rgba(0, 0, 0, 0.5);
+      --bevel-light: rgba(255, 255, 255, 0.18);
+      --bevel-dark: rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--ink);
+      font-family: "Barlow", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% -20%, rgba(132, 240, 255, 0.2), transparent 42%),
+        radial-gradient(circle at 88% -10%, rgba(255, 179, 106, 0.18), transparent 45%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 48%, var(--bg-2) 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          -25deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.02) 2px,
+          transparent 2px,
+          transparent 12px
+        );
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1260px, calc(100% - 2rem));
+      margin: 1.1rem auto 2rem;
+      border-radius: 24px;
+      border: 1px solid rgba(176, 197, 225, 0.36);
+      background:
+        linear-gradient(145deg, rgba(39, 51, 65, 0.92), rgba(20, 29, 39, 0.95));
+      box-shadow: var(--shadow-heavy), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.2rem;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid rgba(176, 197, 225, 0.24);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 0;
+    }
+
+    .badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-family: "Aldrich", sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      color: #0a1016;
+      background: linear-gradient(160deg, #9bf3ff, #65b5ff);
+      border: 1px solid rgba(222, 245, 255, 0.6);
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), inset 0 -6px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-family: "Aldrich", sans-serif;
+      letter-spacing: 0.06em;
+      font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand p {
+      margin: 0;
+      font-size: 0.74rem;
+      letter-spacing: 0.22em;
+      color: var(--warn);
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      padding: 0.56rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(176, 197, 225, 0.28);
+      color: #b8c7d8;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.01));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.17);
+      transition: 160ms ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: #0a131a;
+      border-color: rgba(206, 241, 255, 0.8);
+      background: linear-gradient(180deg, #a6efff, #77c5ff);
+      transform: translateY(-1px);
+    }
+
+    main {
+      padding: 1.1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 0.9rem;
+    }
+
+    .card {
+      position: relative;
+      border-radius: 18px;
+      border: 1px solid rgba(176, 197, 225, 0.2);
+      background: linear-gradient(150deg, rgba(51, 66, 83, 0.8), rgba(24, 34, 46, 0.94));
+      box-shadow: var(--shadow-heavy);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 var(--bevel-light), inset 0 -2px 0 var(--bevel-dark);
+      z-index: 2;
+    }
+
+    .rivets {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .rivet {
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: radial-gradient(circle at 35% 30%, #b7c4d4, #536175 72%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .rivet:nth-child(1) { top: 9px; left: 9px; }
+    .rivet:nth-child(2) { top: 9px; right: 9px; }
+    .rivet:nth-child(3) { bottom: 9px; left: 9px; }
+    .rivet:nth-child(4) { bottom: 9px; right: 9px; }
+
+    .intro {
+      padding: clamp(1.1rem, 3vw, 2rem);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(159, 241, 143, 0.45);
+      background: rgba(159, 241, 143, 0.12);
+      color: var(--ok);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.68rem;
+      padding: 0.36rem 0.72rem;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 10px rgba(159, 241, 143, 0.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .intro h2 {
+      margin: 0.8rem 0 0;
+      font-family: "Aldrich", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-size: clamp(2rem, 5.8vw, 4.2rem);
+      line-height: 1.03;
+      text-wrap: balance;
+    }
+
+    .intro p {
+      margin: 1rem 0 0;
+      line-height: 1.58;
+      color: #d6dfeb;
+      font-size: 1.03rem;
+      max-width: 67ch;
+    }
+
+    .mini-panels {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    .mini-panel {
+      border-radius: 12px;
+      border: 1px solid rgba(176, 197, 225, 0.22);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.6rem 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      color: #bdd1e8;
+    }
+
+    .console {
+      padding: 1rem;
+      display: grid;
+      align-content: start;
+      gap: 0.85rem;
+    }
+
+    .dial {
+      width: min(250px, 100%);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      background:
+        radial-gradient(circle at 48% 44%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.7)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.2));
+      box-shadow: inset 0 8px 15px rgba(255, 255, 255, 0.12), inset 0 -16px 18px rgba(0, 0, 0, 0.58);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .dial-core {
+      width: 74%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(from 210deg, #95f9aa 0 22%, #ffd085 22% 48%, #ff8d8d 48% 70%, #324150 70% 100%);
+      position: relative;
+      box-shadow: inset 0 0 0 9px rgba(26, 35, 46, 0.9), 0 0 18px rgba(132, 240, 255, 0.22);
+    }
+
+    .dial-needle {
+      position: absolute;
+      width: 46%;
+      height: 4px;
+      right: 50%;
+      top: calc(50% - 2px);
+      transform-origin: 100% 50%;
+      transform: rotate(41deg);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), #ffbf76 40%, #ff8383);
+      box-shadow: 0 0 8px rgba(255, 168, 108, 0.7);
+    }
+
+    .dial-core::after {
+      content: "";
+      position: absolute;
+      left: calc(50% - 10px);
+      top: calc(50% - 10px);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #cad6e4, #6d7f97);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .console h3 {
+      margin: 0;
+      text-align: center;
+      font-family: "Aldrich", sans-serif;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--signal);
+    }
+
+    .console p {
+      margin: 0;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #c5d4e6;
+      line-height: 1.45;
+    }
+
+    .toggle-strip {
+      width: fit-content;
+      margin: 0 auto;
+      border-radius: 999px;
+      padding: 0.25rem;
+      border: 1px solid rgba(176, 197, 225, 0.25);
+      background: rgba(0, 0, 0, 0.33);
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .toggle-strip span {
+      border-radius: 999px;
+      padding: 0.32rem 0.62rem;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8ca2bc;
+    }
+
+    .toggle-strip span.live {
+      color: #09141a;
+      background: linear-gradient(180deg, #9ef2ff, #6abaff);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .section {
+      padding: 1rem;
+    }
+
+    .section h4 {
+      margin: 0;
+      font-family: "Aldrich", sans-serif;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--signal);
+    }
+
+    .section p {
+      margin: 0.75rem 0 0;
+      font-size: 1rem;
+      line-height: 1.58;
+      color: #d3dfed;
+    }
+
+    .warning {
+      margin-top: 0.85rem;
+      border-left: 3px solid var(--danger);
+      background: rgba(255, 143, 143, 0.12);
+      border-radius: 0 10px 10px 0;
+      padding: 0.65rem 0.75rem;
+      color: #ffd0d0;
+    }
+
+    .routes {
+      margin-top: 0.86rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .route {
+      text-decoration: none;
+      color: var(--ink);
+      border-radius: 13px;
+      border: 1px solid rgba(176, 197, 225, 0.22);
+      background: linear-gradient(145deg, rgba(56, 71, 88, 0.7), rgba(27, 37, 49, 0.92));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+      padding: 0.82rem;
+      min-height: 90px;
+      transition: 160ms ease;
+    }
+
+    .route:hover {
+      transform: translateY(-2px);
+      border-color: rgba(166, 239, 255, 0.62);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.35);
+    }
+
+    .route strong {
+      display: block;
+      font-family: "Aldrich", sans-serif;
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.3rem;
+    }
+
+    .route span {
+      display: block;
+      font-size: 0.9rem;
+      color: #aec2d9;
+      line-height: 1.35;
+    }
+
+    .route.spacemap {
+      grid-column: 1 / -1;
+      border-color: rgba(255, 179, 106, 0.42);
+      background:
+        radial-gradient(circle at 80% 20%, rgba(255, 179, 106, 0.2), transparent 55%),
+        linear-gradient(145deg, rgba(84, 66, 47, 0.56), rgba(28, 29, 35, 0.94));
+    }
+
+    .route.spacemap strong {
+      color: #ffd7aa;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-top: 1px solid rgba(176, 197, 225, 0.18);
+      background: rgba(0, 0, 0, 0.22);
+      padding: 0.7rem 1rem;
+      color: #8da6c2;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise 620ms ease forwards;
+    }
+
+    .reveal:nth-child(2) { animation-delay: 130ms; }
+    .reveal:nth-child(3) { animation-delay: 220ms; }
+    .reveal:nth-child(4) { animation-delay: 300ms; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-panels {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: calc(100% - 1rem);
+        margin-top: 0.5rem;
+      }
+
+      .masthead {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .routes {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <div class="badge">OD</div>
+        <div>
+          <p>Mission Brief</p>
+          <h1>Orbital Debris, Crowding, and Kessler Syndrome</h1>
+        </div>
+      </div>
+      <nav aria-label="Project pages">
+        <a class="active" href="intro1.html">Intro Alt</a>
+        <a href="intro.html">Intro Main</a>
+        <a href="methods.html">Methods</a>
+        <a href="literature.html">Literature</a>
+        <a href="findings.html">Findings</a>
+        <a href="conclusion.html">Conclusion</a>
+        <a href="SpaceMap.html">SpaceMap</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-grid reveal">
+        <article class="card intro">
+          <div class="rivets" aria-hidden="true">
+            <span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>
+          </div>
+          <span class="status-pill">Telemetry Stable</span>
+          <h2>Near-Earth Orbit Is Entering a Saturation Era</h2>
+          <p>
+            This research introduces orbital debris as an escalating systems challenge shaped by launch growth, legacy hardware,
+            and fragmentation. Orbit is no longer sparse: active satellites, inactive vehicles, and persistent fragments now share
+            constrained altitude bands, raising collision exposure across civil, commercial, and scientific operations.
+          </p>
+          <p>
+            The central concern is the Kessler Syndrome, where collisions generate debris that drives additional collisions. We
+            examine crowding, persistence, and distribution to identify where cascading risk becomes most likely and what that means
+            for long-term orbital sustainability.
+          </p>
+          <div class="mini-panels" aria-label="Focus areas">
+            <div class="mini-panel">Debris Accumulation</div>
+            <div class="mini-panel">Orbital Traffic Density</div>
+            <div class="mini-panel">Cascade Probability</div>
+          </div>
+        </article>
+
+        <aside class="card console reveal" aria-label="Risk console">
+          <div class="rivets" aria-hidden="true">
+            <span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>
+          </div>
+          <div class="dial" role="img" aria-label="Dial indicating elevated congestion level">
+            <div class="dial-core">
+              <span class="dial-needle" aria-hidden="true"></span>
+            </div>
+          </div>
+          <h3>Congestion Gauge</h3>
+          <p>2026-era satellite catalogs suggest an elevated density profile across high-traffic orbital shells.</p>
+          <div class="toggle-strip" aria-label="Analysis mode">
+            <span>Historic</span>
+            <span class="live">Current</span>
+            <span>Forecast</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="card section reveal">
+        <div class="rivets" aria-hidden="true">
+          <span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>
+        </div>
+        <h4>Abstract Scope</h4>
+        <p>
+          The project combines satellite catalog records, trajectory context, and systems interpretation to describe how debris
+          fields evolve with increasing orbital activity. Beyond object counts, the study emphasizes where objects cluster, how
+          long they persist, and how crowding modifies operational risk and mission planning complexity.
+        </p>
+        <p class="warning">
+          Core hypothesis: without stronger mitigation and disposal behavior, congested regimes can shift toward self-reinforcing
+          collision generation.
+        </p>
+      </section>
+
+      <section class="card section reveal">
+        <div class="rivets" aria-hidden="true">
+          <span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>
+        </div>
+        <h4>Research Navigation</h4>
+        <div class="routes" aria-label="Page links">
+          <a class="route" href="methods.html">
+            <strong>Methods</strong>
+            <span>Data collection strategy, filtering rules, and analysis workflow.</span>
+          </a>
+          <a class="route" href="literature.html">
+            <strong>Literature</strong>
+            <span>Prior scholarship on debris growth, conjunction risk, and governance.</span>
+          </a>
+          <a class="route" href="findings.html">
+            <strong>Findings</strong>
+            <span>Observed trends in orbital crowding and Kessler-relevant dynamics.</span>
+          </a>
+          <a class="route" href="conclusion.html">
+            <strong>Conclusion</strong>
+            <span>Implications, limitations, and practical recommendations.</span>
+          </a>
+          <a class="route spacemap" href="SpaceMap.html">
+            <strong>SpaceMap (CesiumJS)</strong>
+            <span>Flagship interactive component featuring orbital satellites from early 2026, used to spatially inspect clustering and congestion patterns.</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Display: Industrial Mission Dossier</span>
+      <span>Project: Orbital Debris Intro (Alt)</span>
+      <span>Reference Epoch: Early 2026</span>
+    </footer>
+  </div>
+</body>
+</html>
