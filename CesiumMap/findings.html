@@ -4,7 +4,19 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Findings | Orbital Debris Research</title>
+	<script src="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Cesium.js"></script>
+	<link href="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
 	<style>
+		:root {
+			--panel-bg: rgba(10, 18, 31, 0.84);
+			--panel-border: rgba(255, 255, 255, 0.22);
+			--text: #eaf4ff;
+			--accent: #7dd3fc;
+			--accent-2: #34d399;
+			--danger: #fca5a5;
+		}
+
 		body {
 			margin: 0;
 			font-family: Arial, sans-serif;
@@ -60,6 +72,215 @@
 			padding: 0.65rem;
 			margin-bottom: 0.8rem;
 		}
+
+		.indent {
+			margin-left: 1.5rem;
+		}
+
+		.quote {
+			margin: 0 0 0.8rem 1.5rem;
+			padding-left: 1rem;
+			border-left: 3px solid #b8c4cf;
+			color: #3c4a57;
+		}
+
+		#embeddedCesiumSection {
+			position: relative;
+			background: #fff;
+			border: 1px solid #d5dde5;
+			border-radius: 8px;
+			padding: 0;
+			margin-bottom: 0.8rem;
+			overflow: hidden;
+		}
+
+		#embeddedCesiumHeader {
+			padding: 0.8rem;
+			background: #f9fafb;
+			border-bottom: 1px solid #e5e7eb;
+		}
+
+		#embeddedCesiumHeader h2 {
+			margin: 0;
+		}
+
+		#embeddedControlPanel {
+			position: absolute;
+			z-index: 20;
+			top: 56px;
+			left: 14px;
+			width: min(380px, calc(100% - 28px));
+			background: var(--panel-bg);
+			border: 1px solid var(--panel-border);
+			border-radius: 12px;
+			backdrop-filter: blur(8px);
+			box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+			padding: 12px;
+			line-height: 1.35;
+			max-height: calc(100% - 80px);
+			overflow-y: auto;
+		}
+
+		.panel-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			margin-bottom: 8px;
+		}
+
+		#panelToggleBtn {
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 8px;
+			padding: 4px 8px;
+			font-size: 0.75rem;
+			color: var(--text);
+			background: rgba(255, 255, 255, 0.08);
+			cursor: pointer;
+		}
+
+		#embeddedControlPanel.collapsed {
+			width: auto;
+			max-width: calc(100% - 28px);
+			padding: 10px 12px;
+		}
+
+		#embeddedControlPanel.collapsed #panelContent {
+			display: none;
+		}
+
+		#embeddedControlPanel h1 {
+			margin: 0;
+			font-size: 1rem;
+			color: var(--accent);
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+		}
+
+		#embeddedControlPanel p {
+			margin: 0 0 10px;
+			opacity: 0.95;
+			font-size: 0.9rem;
+		}
+
+		.controls {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 8px;
+			margin-bottom: 10px;
+		}
+
+		.controls label {
+			display: block;
+			font-size: 0.78rem;
+			margin-bottom: 3px;
+			color: #bfdbfe;
+		}
+
+		.controls input,
+		.controls select {
+			width: 100%;
+			box-sizing: border-box;
+			border-radius: 7px;
+			border: 1px solid rgba(255, 255, 255, 0.28);
+			padding: 7px;
+			background: rgba(255, 255, 255, 0.08);
+			color: var(--text);
+		}
+
+		#groupSelect {
+			width: 100%;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+			border-radius: 7px;
+			border: 1px solid rgba(255, 255, 255, 0.28);
+			padding: 7px;
+			background: rgba(255, 255, 255, 0.08);
+			color: var(--text);
+		}
+
+		#multiGroupSelect {
+			width: 100%;
+			min-height: 108px;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+			border-radius: 7px;
+			border: 1px solid rgba(255, 255, 255, 0.28);
+			padding: 7px;
+			background: rgba(255, 255, 255, 0.08);
+			color: var(--text);
+		}
+
+		#multiGroupSection {
+			margin-bottom: 10px;
+			padding: 8px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 8px;
+			background: rgba(255, 255, 255, 0.04);
+		}
+
+		.toggle-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 8px;
+			font-size: 0.8rem;
+			color: #bfdbfe;
+		}
+
+		#loadBtn {
+			width: 100%;
+			border: none;
+			border-radius: 8px;
+			padding: 9px;
+			font-weight: 600;
+			color: #021119;
+			background: linear-gradient(90deg, var(--accent), var(--accent-2));
+			cursor: pointer;
+		}
+
+		#groupNote {
+			margin-top: 8px;
+			font-size: 0.78rem;
+			color: #fde68a;
+			min-height: 1rem;
+		}
+
+		#sourceNote {
+			margin-top: 6px;
+			font-size: 0.75rem;
+			color: #a7f3d0;
+			min-height: 1rem;
+		}
+
+		#datasetIndicator {
+			margin-top: 6px;
+			font-size: 0.75rem;
+			color: #93c5fd;
+			min-height: 1rem;
+		}
+
+		#datasetIndicator.error {
+			color: #fca5a5;
+		}
+
+		#status {
+			margin-top: 8px;
+			font-size: 0.8rem;
+			min-height: 1.1rem;
+			color: #dbeafe;
+		}
+
+		#status.error {
+			color: var(--danger);
+		}
+
+		#embeddedCesiumContainer {
+			width: 100%;
+			height: 500px;
+			background: radial-gradient(circle at 20% 20%, #16345f 0%, #071223 55%, #02050b 100%);
+			overflow: hidden;
+		}
 	</style>
 </head>
 <body>
@@ -80,56 +301,1084 @@
 			<strong>Rubric target:</strong> Walk readers through discoveries and discuss your visualizations directly.
 		</div>
 
-		<section>
-			<h2>Research Question Reminder</h2>
-			<p>[Restate your research question in one sentence.]</p>
-		</section>
-
-		<section>
-			<h2>Key Results</h2>
-			<ul>
-				<li>[Result statement 1 + evidence]</li>
-				<li>[Result statement 2 + evidence]</li>
-				<li>[Result statement 3 + evidence]</li>
-			</ul>
-		</section>
-
-		<section>
-			<h2>Patterns and Trends</h2>
-			<p>[Describe trends in orbital debris, crowding, and Kessler-related signals, including how trends changed over time or by orbit class.]</p>
-		</section>
+		
 
 		<section>
 			<h2>Visualizations and Interpretation</h2>
-			<ul>
-				<li>[Figure/Map 1: what it shows + why it matters]</li>
-				<li>[Figure/Map 2: what it shows + why it matters]</li>
-				<li>[SpaceMap interpretation note]</li>
-			</ul>
+			<p>From the mid 20th century to the early 21st century, there has been an exponential growth of active satellites in orbit, especially in the last few years. At the beginning of 1960, there were two active satellites in orbit. In 1980 there were 304. In 2000, there were 2,283. As of April of 2026, there are currently 15,439 satellites in orbit. Of this recent massive increase in numbers, the vast majority (a little over 10,000) are part of Starlink’s mega constellation. As other corporations and countries plan to bring their own megaconstellations online, this number is likely to skyrocket even further. Blue Origin plans to place approximately 50,000 satellites in LEO (CITE), and Starlink announced further plans to place a million “AI Datacenter” satellites in a higher orbit. (CITE).</p>
+			<p class="indent">&lt;ADD BAR CHART&gt;</p>
+			<p class="indent">In the discussion with Dr. Matney, overcrowding is a risk, but a greater risk comes from uncontrollable dead satellites. While these satellites may have advanced and sometimes automated collision avoidance algorithms, the sheer number of them raise the risk of technical failures or collision with untracked debris. (CITE?) Recently, several starlink satellites suffered as-of-yet unexplained explosions, including Starlink 34343 on March 29, 2026. (CITE). While small in number, these incidents demonstrate the inevitable risk of malfunctions present at industrial scale.</p>
+			<p class="indent">Using data gathered from CelesTrak around early March and CesiumJS, this map has been created to visualize the current orbital environment of satellites. By default, it tracks around 1000 satellites over the course of 90 minutes. While only one fifteenth of the total number of active satellites currently in orbit, it demonstrates the various layers of orbits as well as the vast number of active satellites.</p>
+			<p class="indent">&lt;MAP&gt;</p>
+			<p class="indent">When discussing various orbital altitudes at risk for debris, Dr. Matney breaks down the distinctions well:</p>
+			<blockquote class="quote">
+				The first key to understand is the lifetime of an object due to atmospheric drag is a function of orbit altitude. At ISS altitude (400 km), the lifetime of a satellite is months to years. Up at HST altitudes (600 km), it is decades. Around 800 km, it is more like centuries. Above 1000 km, natural lifetimes are essentially infinite by human standards (thousands of years or more). People tend to launch satellites where drag is small, so ~800 km and above. So there are lots of objects, both active and dead, at those high altitudes. There have been lots of explosions there, plus collisions, so it is the most congested region. Energetic breakups - collisions and explosions - mostly affect the immediate altitude, but spread debris all around. By the way, I am keeping this simple for convenience. I am talking about circular orbits. There are highly elliptical orbits that have many complicating factors, but right now near-circular orbits dominate the risk. (Matney).
+			</blockquote>
+			<p>As it stands, the missions at the greatest risk of space debris are manned missions, especially space stations. Both the International Space Station and the Tiengong Space Station orbit at low altitudes. At the low altitudes of 400 km, the two space stations frequently maneuver to avoid large debris, and their exteriors are pockmarked with impacts from small debris. Currently, the ISS has to maneuver around large debris once a year, but if the amount of debris grows, it may become impractical to maintain manned missions in orbit. (CITE)</p>
+			<p>There have been many proposed and implemented solutions to preventing, minimizing, and removing debris from orbit, but the problem is far from fixed. Dr. Matney notes that even if launches were to stop today, the debris environment would continue to grow,</p>
+			<blockquote class="quote">
+				The problem that most people do not understand is the time scale over which it occurs. It evolves in slow motion by human scale, but it is inevitable, given enough time, and lacking any changes to how we do things. One way we show that is to take the current population and project it forward, assuming no new launches. The collision environment grows inexorably. But, of course, we are not stopping launches. We continue to launch satellites into space faster than they are removed by natural drag. So, it is a dynamic and complicated projection challenge.
+			</blockquote>
+			<p>One major recent change is the implementation of the 5-year rule, an international recommendation to limit the life of a satellite to five years after its mission is complete. As this is a recommendation and not a binding international treaty, space agencies are not forced to follow this rule. (CITE).</p>
+			<p>Several companies and organizations have designed and proposed various solutions to removing orbital debris, ranging from satellites with claws to ground based lasers to push debris around. However, none of these proposals have been tested in orbit yet, so the feasibility of these systems is currently unknown. With the advent of megaconstellations, there has been increased interest in the field, but most projects remain in their infancy. (CITE)</p>
+		</section>
 		</section>
 
-		<section>
-			<h2>Interpretation and Significance</h2>
-			<p>[Explain what these findings mean for your larger topic and argument.]</p>
-		</section>
+		<div id="embeddedCesiumSection">
+			<div id="embeddedCesiumHeader">
+				<h2>Interactive Satellite Map</h2>
+				<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Explore the current satellite catalog in 3D. Use the controls on the left to filter by satellite type and visualization parameters.</p>
+			</div>
 
-		<section>
-			<h2>Limits of Findings</h2>
-			<p>[State uncertainty, weak spots, and what your findings cannot claim.]</p>
-		</section>
+			<div id="embeddedControlPanel">
+				<div class="panel-header">
+					<h1>Satellite Catalog View</h1>
+					<button id="panelToggleBtn" type="button" aria-expanded="true" aria-controls="panelContent">Minimize</button>
+				</div>
 
-		<section>
-			<h2>Questions Raised by the Findings</h2>
-			<p>[List follow-up questions created by your current analysis.]</p>
-		</section>
+				<div id="panelContent">
+					<p>
+						Loads local JSON orbital elements, converts them into CZML samples with
+						satellite.js, then renders the selected group in one Cesium CZML data source.
+					</p>
 
-		<section>
-			<h2>Findings Works Cited (Draft)</h2>
-			<ul>
-				<li>[APA/MLA citation + direct link]</li>
-				<li>[APA/MLA citation + direct link]</li>
-			</ul>
-		</section>
-	</main>
-</body>
-</html>
+					<div class="controls">
+						<div>
+							<label for="datasetSelect">Dataset preset</label>
+							<select id="datasetSelect" aria-label="Dataset preset selector">
+								<option value="CURRENT">Current catalog (all launch years)</option>
+								<option value="PRE_1970">Launch-era view: 1960s and earlier</option>
+								<option value="PRE_1980">Launch-era view: through 1979</option>
+								<option value="PRE_2000">Launch-era view: through 1999</option>
+								<option value="RANGE_2000_2010">Modern launch-era view: 2000-2010</option>
+								<option value="POST_2010">Modern launch-era view: 2010-present</option>
+							</select>
+						</div>
+						<div>
+							<label for="globeStyleSelect">Globe style</label>
+							<select id="globeStyleSelect" aria-label="Globe style selector">
+								<option value="SATELLITE">Satellite imagery</option>
+								<option value="STREETS">Street map</option>
+								<option value="DARK">Dark no-basemap</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="controls">
+						<div>
+							<label for="maxCount">Max satellites</label>
+							<input id="maxCount" type="number" min="10" max="5000" step="10" value="500">
+						</div>
+						<div>
+							<label for="stepSeconds">Sample step (sec)</label>
+							<input id="stepSeconds" type="number" min="10" max="300" step="10" value="60">
+						</div>
+						<div>
+							<label for="durationMinutes">Duration (min)</label>
+							<input id="durationMinutes" type="number" min="20" max="43200" step="10" value="90">
+						</div>
+						<div>
+							<label for="trailSeconds">Orbit trail (sec)</label>
+							<input id="trailSeconds" type="number" min="60" max="21600" step="60" value="5400">
+						</div>
+					</div>
+
+					<label for="groupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Display Group</label>
+					<select id="groupSelect" aria-label="Display group selector"></select>
+
+					<div id="multiGroupSection">
+						<label class="toggle-row" for="multiGroupMode">
+							<input id="multiGroupMode" type="checkbox">
+							Enable multi-group mode
+						</label>
+						<label for="multiGroupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Choose multiple groups (Ctrl/Cmd+click)</label>
+						<select id="multiGroupSelect" aria-label="Multiple group selector" multiple></select>
+						<div class="controls" style="margin-bottom:6px;">
+							<div>
+								<label for="perGroupCount">Per-group max count</label>
+								<input id="perGroupCount" type="number" min="1" max="5000" step="1" value="100">
+							</div>
+							<div>
+								<label for="colorByGroup">Color by group</label>
+								<input id="colorByGroup" type="checkbox" checked>
+							</div>
+						</div>
+					</div>
+
+					<label class="toggle-row" for="enduranceMode">
+						<input id="enduranceMode" type="checkbox">
+						Endurance mode (maximize satellites across groups for long runs)
+					</label>
+
+					<button id="loadBtn" type="button">Visualize Sattelites</button>
+					<div id="groupNote"></div>
+					<div id="sourceNote"></div>
+					<div id="datasetIndicator"></div>
+					<div id="status">Waiting to load local satellite JSON data...</div>
+				</div>
+			</div>
+
+			<div id="embeddedCesiumContainer"></div>
+		</div>
+
+		
+			<script type="module">
+				const controlPanel = document.getElementById('embeddedControlPanel');
+				const panelToggleBtn = document.getElementById('panelToggleBtn');
+				const ION_TOKEN_FILE_PATH = './.token';
+
+				async function loadIonAccessToken() {
+					if (location.protocol === 'file:') {
+						throw new Error('This page cannot load .token via file://. Start a local web server and open CesiumMap/index.html through http://localhost.');
+					}
+
+					const response = await fetch(ION_TOKEN_FILE_PATH, { cache: 'no-store' });
+					if (!response.ok) {
+						throw new Error(`Failed to load ${ION_TOKEN_FILE_PATH}: ${response.status} ${response.statusText}`);
+					}
+
+					const token = (await response.text()).trim();
+					if (!token) {
+						throw new Error('The Cesium Ion token file is empty.');
+					}
+
+					return token;
+				}
+
+				Cesium.Ion.defaultAccessToken = await loadIonAccessToken();
+
+				const viewer = new Cesium.Viewer('embeddedCesiumContainer', {
+					terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+					animation: true,
+					timeline: true,
+					shouldAnimate: true,
+					selectionIndicator: false,
+					infoBox: true,
+					shadows: false
+				});
+
+				viewer.scene.globe.enableLighting = true;
+				viewer.scene.skyAtmosphere.show = true;
+				viewer.scene.moon.show = true;
+
+				const statusElement = document.getElementById('status');
+				const groupNoteElement = document.getElementById('groupNote');
+				const sourceNoteElement = document.getElementById('sourceNote');
+				const datasetIndicatorElement = document.getElementById('datasetIndicator');
+				const datasetSelect = document.getElementById('datasetSelect');
+				const globeStyleSelect = document.getElementById('globeStyleSelect');
+				const groupSelect = document.getElementById('groupSelect');
+				const multiGroupSelect = document.getElementById('multiGroupSelect');
+				const multiGroupMode = document.getElementById('multiGroupMode');
+				const enduranceModeInput = document.getElementById('enduranceMode');
+				const perGroupCountInput = document.getElementById('perGroupCount');
+				const colorByGroupInput = document.getElementById('colorByGroup');
+				const loadBtn = document.getElementById('loadBtn');
+				const maxCountInput = document.getElementById('maxCount');
+				const stepSecondsInput = document.getElementById('stepSeconds');
+				const durationMinutesInput = document.getElementById('durationMinutes');
+				const trailSecondsInput = document.getElementById('trailSeconds');
+
+				let activeSatelliteSource = null;
+				let localCatalogPromise = null;
+				let selectedGroup = 'ALL';
+				let availableGroups = ['ALL'];
+				let selectedDatasetPreset = 'CURRENT';
+				let selectedGlobeStyle = 'SATELLITE';
+				let referenceDate = new Date();
+
+				const APP_VERSION = 'local-json-v4';
+				const DATA_FILE_PATH = './Sattelites.json';
+
+				const GROUP_COLORS = {
+					STARLINK: [76, 201, 255, 225],
+					ONEWEB: [167, 243, 208, 225],
+					IRIDIUM: [248, 113, 113, 225],
+					NAVIGATION: [250, 204, 21, 225],
+					WEATHER: [147, 197, 253, 225],
+					'GEO COMM': [216, 180, 254, 225],
+					'ROCKET/DEBRIS': [251, 146, 60, 225],
+					OTHER: [203, 213, 225, 225]
+				};
+
+				const MAX_SAMPLES_PER_SATELLITE = 3600;
+				const TARGET_SAMPLES_PER_SATELLITE = 2400;
+				const MIN_SAMPLES_PER_SATELLITE = 30;
+				const MAX_TOTAL_CARTOGRAPHIC_VALUES = 1200000;
+
+				function setPanelCollapsed(collapsed) {
+					controlPanel.classList.toggle('collapsed', collapsed);
+					panelToggleBtn.textContent = collapsed ? 'Expand' : 'Minimize';
+					panelToggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+				}
+
+				function setStatus(message, isError = false) {
+					statusElement.textContent = message;
+					statusElement.classList.toggle('error', isError);
+				}
+
+				function setDatasetIndicator(message, isError = false) {
+					datasetIndicatorElement.textContent = message;
+					datasetIndicatorElement.classList.toggle('error', isError);
+				}
+
+				function inferGroupFromName(name) {
+					const n = String(name || '').toUpperCase();
+
+					if (n.includes('STARLINK')) return 'STARLINK';
+					if (n.includes('ONEWEB')) return 'ONEWEB';
+					if (n.includes('IRIDIUM')) return 'IRIDIUM';
+					if (
+						n.includes('GPS') ||
+						n.includes('NAVSTAR') ||
+						n.includes('GLONASS') ||
+						n.includes('GALILEO') ||
+						n.includes('BEIDOU')
+					) return 'NAVIGATION';
+					if (
+						n.includes('WEATHER') ||
+						n.includes('NOAA') ||
+						n.includes('GOES') ||
+						n.includes('HIMAWARI') ||
+						n.includes('METEOR')
+					) return 'WEATHER';
+					if (
+						n.includes('SES') ||
+						n.includes('INTELSAT') ||
+						n.includes('EUTELSAT') ||
+						n.includes('INMARSAT') ||
+						n.includes('VIASAT') ||
+						n.includes('AMAZONAS')
+					) return 'GEO COMM';
+					if (
+						n.includes(' DEB') ||
+						n.includes(' R/B') ||
+						n.includes('DEBRIS') ||
+						n.includes('FREGAT') ||
+						n.includes('CZ-') ||
+						n.includes('SL-')
+					) return 'ROCKET/DEBRIS';
+
+					return 'OTHER';
+				}
+
+				function getLaunchYear(record) {
+					const objectId = String(record?.OBJECT_ID || '').trim();
+					const match = objectId.match(/^(\d{4})-/);
+					if (!match) {
+						return Number.POSITIVE_INFINITY;
+					}
+					const year = Number(match[1]);
+					return Number.isFinite(year) ? year : Number.POSITIVE_INFINITY;
+				}
+
+				function describeDatasetPreset(preset) {
+					if (preset === 'PRE_1970') return 'Launch-era approximation: 1960s and earlier';
+					if (preset === 'PRE_1980') return 'Launch-era approximation: through 1979';
+					if (preset === 'PRE_2000') return 'Launch-era approximation: through 1999';
+					if (preset === 'RANGE_2000_2010') return 'Launch-era approximation: 2000 through 2010';
+					if (preset === 'POST_2010') return 'Launch-era approximation: 2010 and newer';
+					return 'Current catalog (all launch years)';
+				}
+
+				function applyDatasetPreset(records, preset) {
+					if (preset === 'PRE_1970') {
+						return records.filter((record) => getLaunchYear(record) < 1970);
+					}
+					if (preset === 'PRE_1980') {
+						return records.filter((record) => getLaunchYear(record) < 1980);
+					}
+					if (preset === 'PRE_2000') {
+						return records.filter((record) => getLaunchYear(record) < 2000);
+					}
+					if (preset === 'RANGE_2000_2010') {
+						return records.filter((record) => {
+							const year = getLaunchYear(record);
+							return year >= 2000 && year <= 2010;
+						});
+					}
+					if (preset === 'POST_2010') {
+						return records.filter((record) => getLaunchYear(record) >= 2010);
+					}
+					return records;
+				}
+
+				function getDatasetPresetCounts(records) {
+					const presets = ['CURRENT', 'PRE_1970', 'PRE_1980', 'PRE_2000', 'RANGE_2000_2010', 'POST_2010'];
+					const counts = {};
+
+					presets.forEach((preset) => {
+						counts[preset] = applyDatasetPreset(records, preset).length;
+					});
+
+					return counts;
+				}
+
+				function getRepresentativeEpochDate(records, preset) {
+					const dates = records
+						.map((record) => {
+							try {
+								return parseEpochAsUtc(record.EPOCH);
+							} catch (error) {
+								return null;
+							}
+						})
+						.filter(Boolean)
+						.sort((a, b) => a.getTime() - b.getTime());
+
+					if (!dates.length) {
+						return new Date();
+					}
+
+					if (preset === 'PRE_1970' || preset === 'PRE_1980' || preset === 'PRE_2000') {
+						return dates[dates.length - 1];
+					}
+
+					return dates[Math.floor(dates.length / 2)];
+				}
+
+				async function zoomToOrFallback(dataSource) {
+					try {
+						const zoomed = await viewer.zoomTo(dataSource);
+						if (zoomed) {
+							return;
+						}
+					} catch (error) {
+						// Fallback keeps the globe visible when zoom cannot resolve bounds.
+					}
+
+					viewer.camera.flyTo({
+						destination: Cesium.Cartesian3.fromDegrees(-97.0, 28.5, 24000000)
+					});
+				}
+
+				function updateDatasetPresetLabels(records) {
+					const counts = getDatasetPresetCounts(records);
+					const labels = {
+						CURRENT: `Current catalog (all launch years) [${counts.CURRENT}]`,
+						PRE_1970: `Launch-era view: 1960s and earlier [${counts.PRE_1970}]`,
+						PRE_1980: `Launch-era view: through 1979 [${counts.PRE_1980}]`,
+						PRE_2000: `Launch-era view: through 1999 [${counts.PRE_2000}]`,
+						RANGE_2000_2010: `Modern launch-era view: 2000-2010 [${counts.RANGE_2000_2010}]`,
+						POST_2010: `Modern launch-era view: 2010-present [${counts.POST_2010}]`
+					};
+
+					Array.from(datasetSelect.options).forEach((option) => {
+						option.textContent = labels[option.value] || option.textContent;
+					});
+				}
+
+				async function ensureVisibleGlobe(style) {
+					if (style === 'DARK') {
+						viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0b1220');
+						return;
+					}
+
+					if (viewer.imageryLayers.length > 0) {
+						return;
+					}
+
+					try {
+						const fallbackImagery = await Cesium.ArcGisMapServerImageryProvider.fromUrl(
+							'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+						);
+						viewer.imageryLayers.addImageryProvider(fallbackImagery);
+					} catch (error) {
+						viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#1f2937');
+					}
+				}
+
+				async function applyGlobeStyle(style) {
+					viewer.imageryLayers.removeAll(true);
+
+					if (style === 'DARK') {
+						viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#030712');
+						return;
+					}
+
+					viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+
+					if (style === 'STREETS') {
+						const osm = new Cesium.OpenStreetMapImageryProvider({
+							url: 'https://tile.openstreetmap.org/'
+						});
+						viewer.imageryLayers.addImageryProvider(osm);
+						return;
+					}
+
+					const satelliteImagery = await Cesium.ArcGisMapServerImageryProvider.fromUrl(
+						'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+					);
+					viewer.imageryLayers.addImageryProvider(satelliteImagery);
+					await ensureVisibleGlobe(style);
+				}
+
+				function applyGroupFilter(records) {
+					if (selectedGroup === 'ALL') {
+						return records;
+					}
+					return records.filter((record) => inferGroupFromName(record.OBJECT_NAME) === selectedGroup);
+				}
+
+				function getAvailableGroups(records) {
+					const groups = new Set();
+					records.forEach((record) => {
+						groups.add(inferGroupFromName(record.OBJECT_NAME));
+					});
+
+					return ['ALL', ...Array.from(groups).sort((a, b) => a.localeCompare(b))];
+				}
+
+				function populateGroupSelect(records) {
+					groupSelect.innerHTML = '';
+					const groups = getAvailableGroups(records);
+					availableGroups = groups;
+
+					groups.forEach((group) => {
+						const option = document.createElement('option');
+						option.value = group;
+						option.textContent = group;
+						groupSelect.appendChild(option);
+					});
+
+					multiGroupSelect.innerHTML = '';
+					groups
+						.filter((group) => group !== 'ALL')
+						.forEach((group) => {
+							const option = document.createElement('option');
+							option.value = group;
+							option.textContent = group;
+							multiGroupSelect.appendChild(option);
+						});
+
+					groupSelect.value = selectedGroup;
+				}
+
+				function getSelectedMultiGroups() {
+					return Array.from(multiGroupSelect.selectedOptions).map((option) => option.value);
+				}
+
+				function selectAcrossGroups(records, groupNames, perGroupCount, maxCount) {
+					const cappedMaxCount = Math.max(1, maxCount);
+					const groups = groupNames.filter((groupName) => groupName !== 'ALL');
+					const buckets = groups.map((groupName) => {
+						const items = records
+							.filter((record) => inferGroupFromName(record.OBJECT_NAME) === groupName)
+							.sort((a, b) => String(a.OBJECT_NAME || '').localeCompare(String(b.OBJECT_NAME || '')))
+							.slice(0, perGroupCount);
+
+						return { groupName, items, cursor: 0 };
+					}).filter((bucket) => bucket.items.length > 0);
+
+					if (!buckets.length) {
+						return [];
+					}
+
+					const selection = [];
+					while (selection.length < cappedMaxCount) {
+						let progressed = false;
+						for (const bucket of buckets) {
+							if (selection.length >= cappedMaxCount) {
+								break;
+							}
+							if (bucket.cursor < bucket.items.length) {
+								selection.push(bucket.items[bucket.cursor]);
+								bucket.cursor += 1;
+								progressed = true;
+							}
+						}
+
+						if (!progressed) {
+							break;
+						}
+					}
+
+					return selection;
+				}
+
+				function getGroupColor(groupName, colorByGroupEnabled) {
+					if (!colorByGroupEnabled) {
+						return [76, 201, 255, 225];
+					}
+					return GROUP_COLORS[groupName] || [203, 213, 225, 225];
+				}
+
+				function sanitizeNumber(value, options) {
+					const {
+						fallback,
+						min = Number.NEGATIVE_INFINITY,
+						max = Number.POSITIVE_INFINITY,
+						integer = false
+					} = options;
+
+					let n = Number(value);
+					if (!Number.isFinite(n)) {
+						n = fallback;
+					}
+
+					if (integer) {
+						n = Math.round(n);
+					}
+
+					if (n < min) n = min;
+					if (n > max) n = max;
+
+					return n;
+				}
+
+				function getEffectiveStepSeconds(durationSeconds, requestedStepSeconds) {
+					const minStepForTarget = Math.max(1, Math.ceil(durationSeconds / TARGET_SAMPLES_PER_SATELLITE));
+					return Math.max(requestedStepSeconds, minStepForTarget);
+				}
+
+				function getClockMultiplier(durationMinutes) {
+					if (durationMinutes >= 7 * 24 * 60) return 3600;
+					if (durationMinutes >= 24 * 60) return 1200;
+					if (durationMinutes >= 6 * 60) return 300;
+					return 20;
+				}
+
+				async function getLocalSatelliteCatalog() {
+					if (!localCatalogPromise) {
+						localCatalogPromise = (async () => {
+							setStatus('Loading local JSON catalog only...');
+
+							if (location.protocol === 'file:') {
+								throw new Error('This page cannot load JSON via file://. Start a local web server and open CesiumMap/index.html through http://localhost.');
+							}
+
+							const response = await fetch(DATA_FILE_PATH, { cache: 'no-store' });
+							if (!response.ok) {
+								throw new Error(`Failed to load ${DATA_FILE_PATH}: ${response.status} ${response.statusText}`);
+							}
+
+							const json = await response.json();
+							if (!Array.isArray(json)) {
+								throw new Error('Local JSON is not an array of satellite records.');
+							}
+							return json;
+						})();
+					}
+
+					return localCatalogPromise;
+				}
+
+				function parseEpochAsUtc(epochValue) {
+					const raw = String(epochValue || '').trim();
+					if (!raw) {
+						throw new Error('Missing EPOCH value');
+					}
+
+					const normalized = /Z$|[+-]\d\d:?\d\d$/.test(raw) ? raw : `${raw}Z`;
+					const date = new Date(normalized);
+					if (Number.isNaN(date.getTime())) {
+						throw new Error(`Invalid EPOCH value: ${raw}`);
+					}
+
+					return date;
+				}
+
+				function toTleEpoch(epochValue) {
+					const date = parseEpochAsUtc(epochValue);
+					const year = date.getUTCFullYear();
+					const start = Date.UTC(year, 0, 1, 0, 0, 0, 0);
+					const dayOfYear = ((date.getTime() - start) / 86400000) + 1;
+					const yy = String(year % 100).padStart(2, '0');
+					const ddd = dayOfYear.toFixed(8).padStart(12, '0');
+					return `${yy}${ddd}`;
+				}
+
+				function formatTleSignedFixed(value, decimals, width) {
+					const n = Number(value) || 0;
+					return n.toFixed(decimals).padStart(width, ' ');
+				}
+
+				function formatTleAssumedExponent(value) {
+					const n = Number(value) || 0;
+					if (n === 0) {
+						return ' 00000-0';
+					}
+
+					const sign = n < 0 ? '-' : ' ';
+					const abs = Math.abs(n);
+					let exponent = Math.floor(Math.log10(abs));
+					let mantissa = abs / Math.pow(10, exponent);
+					mantissa /= 10;
+					exponent += 1;
+
+					let digits = Math.round(mantissa * 100000);
+					if (digits > 99999) {
+						digits = 10000;
+						exponent += 1;
+					}
+
+					if (exponent > 9) exponent = 9;
+					if (exponent < -9) exponent = -9;
+
+					const expSign = exponent < 0 ? '-' : '+';
+					return `${sign}${String(digits).padStart(5, '0')}${expSign}${Math.abs(exponent)}`;
+				}
+
+				function computeTleChecksum(lineWithoutChecksum) {
+					let sum = 0;
+					for (let i = 0; i < lineWithoutChecksum.length; i += 1) {
+						const ch = lineWithoutChecksum[i];
+						if (ch >= '0' && ch <= '9') {
+							sum += Number(ch);
+						} else if (ch === '-') {
+							sum += 1;
+						}
+					}
+					return String(sum % 10);
+				}
+
+				function getIntlDesignatorParts(objectId) {
+					const raw = String(objectId || '').trim();
+					const m = raw.match(/^(\d{4})-(\d{3})([A-Z0-9]{0,3})$/i);
+					if (!m) {
+						return { year: '00', launch: '000', piece: '   ' };
+					}
+					return {
+						year: m[1].slice(-2),
+						launch: m[2],
+						piece: m[3].toUpperCase().padEnd(3, ' ')
+					};
+				}
+
+				function buildSyntheticTle(record, fallbackIndex) {
+					const satNum = String(Number(record.NORAD_CAT_ID || fallbackIndex || 1)).padStart(5, '0').slice(-5);
+					const classification = String(record.CLASSIFICATION_TYPE || 'U').charAt(0) || 'U';
+					const intl = getIntlDesignatorParts(record.OBJECT_ID);
+					const epoch = toTleEpoch(record.EPOCH);
+					const mmDot = formatTleSignedFixed(record.MEAN_MOTION_DOT, 8, 10);
+					const mmDdot = formatTleAssumedExponent(record.MEAN_MOTION_DDOT);
+					const bstar = formatTleAssumedExponent(record.BSTAR);
+					const ephType = String(Number(record.EPHEMERIS_TYPE || 0)).slice(-1);
+					const elset = String(Number(record.ELEMENT_SET_NO || 0)).padStart(4, '0').slice(-4);
+
+					const line1WithoutChecksum =
+						`1 ${satNum}${classification} ${intl.year}${intl.launch}${intl.piece} ${epoch} ${mmDot} ${mmDdot} ${bstar} ${ephType} ${elset}`;
+					const line1 = `${line1WithoutChecksum}${computeTleChecksum(line1WithoutChecksum)}`;
+
+					const inc = formatTleSignedFixed(record.INCLINATION, 4, 8);
+					const raan = formatTleSignedFixed(record.RA_OF_ASC_NODE, 4, 8);
+					const ecc = String(Math.round((Number(record.ECCENTRICITY) || 0) * 1e7)).padStart(7, '0').slice(-7);
+					const argPer = formatTleSignedFixed(record.ARG_OF_PERICENTER, 4, 8);
+					const meanAno = formatTleSignedFixed(record.MEAN_ANOMALY, 4, 8);
+					const meanMotion = formatTleSignedFixed(record.MEAN_MOTION, 8, 11);
+					const rev = String(Number(record.REV_AT_EPOCH || 0)).padStart(5, '0').slice(-5);
+
+					const line2WithoutChecksum =
+						`2 ${satNum} ${inc} ${raan} ${ecc} ${argPer} ${meanAno} ${meanMotion}${rev}`;
+					const line2 = `${line2WithoutChecksum}${computeTleChecksum(line2WithoutChecksum)}`;
+
+					return { line1, line2 };
+				}
+
+				function isSatrecUsable(satrec) {
+					return Boolean(
+						satrec &&
+						Number.isFinite(satrec.no) &&
+						(typeof satrec.error !== 'number' || satrec.error === 0)
+					);
+				}
+
+				function toSatrec(record, index) {
+					if (typeof satellite.json2satrec === 'function') {
+						const satrec = satellite.json2satrec(record);
+						if (isSatrecUsable(satrec)) {
+							return satrec;
+						}
+					}
+
+					if (typeof satellite.ommToSatrec === 'function') {
+						const satrec = satellite.ommToSatrec(record);
+						if (isSatrecUsable(satrec)) {
+							return satrec;
+						}
+					}
+
+					if (record.LINE1 && record.LINE2) {
+						const satrec = satellite.twoline2satrec(record.LINE1, record.LINE2);
+						if (isSatrecUsable(satrec)) {
+							return satrec;
+						}
+					}
+
+					const synthetic = buildSyntheticTle(record, index + 1);
+					const syntheticSatrec = satellite.twoline2satrec(synthetic.line1, synthetic.line2);
+					if (isSatrecUsable(syntheticSatrec)) {
+						return syntheticSatrec;
+					}
+
+					throw new Error('Record cannot be converted from JSON orbital elements or TLE fields.');
+				}
+
+				function elementToCzmlPacket(options) {
+					const {
+						record,
+						groupName,
+						colorByGroupEnabled,
+						satrec,
+						startDate,
+						durationSeconds,
+						stepSeconds,
+						maxSamplesPerSatellite,
+						trailSeconds,
+						startIso,
+						stopIso,
+						index
+					} = options;
+
+					const cartographicDegrees = [];
+					const rawSampleCount = Math.max(1, Math.floor(durationSeconds / stepSeconds) + 1);
+					const sampleCount = Math.min(
+						rawSampleCount,
+						MAX_SAMPLES_PER_SATELLITE,
+						Math.max(2, maxSamplesPerSatellite || MAX_SAMPLES_PER_SATELLITE)
+					);
+					const sampleSpacingSeconds = sampleCount > 1 ? durationSeconds / (sampleCount - 1) : 0;
+					for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex += 1) {
+						const t = sampleCount > 1 ? sampleIndex * sampleSpacingSeconds : 0;
+						const sampleDate = new Date(startDate.getTime() + t * 1000);
+						const pv = satellite.propagate(satrec, sampleDate);
+						if (!pv || !pv.position) {
+							continue;
+						}
+
+						const gmst = satellite.gstime(sampleDate);
+						const geodetic = satellite.eciToGeodetic(pv.position, gmst);
+
+						const lon = satellite.degreesLong(geodetic.longitude);
+						const lat = satellite.degreesLat(geodetic.latitude);
+						const heightMeters = geodetic.height * 1000;
+
+						if (!Number.isFinite(lon) || !Number.isFinite(lat) || !Number.isFinite(heightMeters)) {
+							continue;
+						}
+
+						cartographicDegrees.push(t, lon, lat, heightMeters);
+					}
+
+					if (cartographicDegrees.length < 4) {
+						return null;
+					}
+
+					const rgba = getGroupColor(groupName, colorByGroupEnabled);
+
+					return {
+						id: `sat-${record.NORAD_CAT_ID || index}`,
+						name: record.OBJECT_NAME || `SAT-${index}`,
+						availability: `${startIso}/${stopIso}`,
+						description: [
+							`<b>Name:</b> ${record.OBJECT_NAME || 'Unknown'}`,
+							`<br><b>NORAD:</b> ${record.NORAD_CAT_ID ?? 'Unknown'}`,
+							`<br><b>Object ID:</b> ${record.OBJECT_ID || 'Unknown'}`,
+							`<br><b>Group (inferred):</b> ${groupName}`
+						].join(''),
+						point: {
+							color: { rgba },
+							outlineColor: { rgba: [5, 28, 52, 255] },
+							outlineWidth: 1,
+							pixelSize: 4
+						},
+						path: {
+							material: {
+								solidColor: {
+									color: { rgba: [rgba[0], rgba[1], rgba[2], 120] }
+								}
+							},
+							width: 1,
+							leadTime: 0,
+							trailTime: trailSeconds,
+							resolution: Math.max(10, Math.min(300, stepSeconds))
+						},
+						position: {
+							epoch: startIso,
+							interpolationAlgorithm: 'LAGRANGE',
+							interpolationDegree: 5,
+							cartographicDegrees
+						}
+					};
+				}
+
+				async function buildLocalJsonCzml(options) {
+					const {
+						maxCount,
+						perGroupCount,
+						multiMode,
+						enduranceMode,
+						selectedMultiGroups,
+						colorByGroup,
+						stepSeconds,
+						durationMinutes,
+						trailSeconds
+					} = options;
+
+					const allSatellites = await getLocalSatelliteCatalog();
+					const presetFilteredSatellites = applyDatasetPreset(allSatellites, selectedDatasetPreset);
+
+					if (!presetFilteredSatellites.length) {
+						throw new Error(`Dataset preset "${describeDatasetPreset(selectedDatasetPreset)}" returned no records.`);
+					}
+
+					const hasNativeCategory = presetFilteredSatellites.some((record) =>
+						Object.prototype.hasOwnProperty.call(record, 'GROUP') ||
+						Object.prototype.hasOwnProperty.call(record, 'CATEGORY')
+					);
+
+					groupNoteElement.textContent = hasNativeCategory
+						? 'Local JSON appears to include native category fields.'
+						: `${describeDatasetPreset(selectedDatasetPreset)}. Groups are inferred from OBJECT_NAME.`;
+
+					let filtered = [];
+					let selected = [];
+
+					if (multiMode && selectedMultiGroups.length > 0) {
+						filtered = presetFilteredSatellites.filter((record) => selectedMultiGroups.includes(inferGroupFromName(record.OBJECT_NAME)));
+						selected = selectAcrossGroups(presetFilteredSatellites, selectedMultiGroups, perGroupCount, maxCount);
+					} else {
+						filtered = applyGroupFilter(presetFilteredSatellites);
+						selected = filtered
+							.slice()
+							.sort((a, b) => String(a.OBJECT_NAME || '').localeCompare(String(b.OBJECT_NAME || '')))
+							.slice(0, maxCount);
+					}
+
+					if (!selected.length) {
+						const groupDescription = multiMode ? selectedMultiGroups.join(', ') || 'none selected' : selectedGroup;
+						throw new Error(`No satellites matched the selected group(s): ${groupDescription}.`);
+					}
+
+					referenceDate = getRepresentativeEpochDate(selected, selectedDatasetPreset);
+					const start = Cesium.JulianDate.fromDate(referenceDate);
+					const stop = Cesium.JulianDate.addMinutes(start, durationMinutes, new Cesium.JulianDate());
+					const startIso = Cesium.JulianDate.toIso8601(start);
+					const stopIso = Cesium.JulianDate.toIso8601(stop);
+					const startDate = Cesium.JulianDate.toDate(start);
+					const durationSeconds = durationMinutes * 60;
+					const requestedStepSeconds = getEffectiveStepSeconds(durationSeconds, stepSeconds);
+					const requestedSampleCount = Math.max(2, Math.floor(durationSeconds / requestedStepSeconds) + 1);
+					const budgetLimitedSamples = Math.floor(MAX_TOTAL_CARTOGRAPHIC_VALUES / Math.max(1, selected.length * 4));
+					const maxSamplesPerSatellite = Math.max(
+						MIN_SAMPLES_PER_SATELLITE,
+						Math.min(MAX_SAMPLES_PER_SATELLITE, requestedSampleCount, budgetLimitedSamples)
+					);
+					const effectiveStepSeconds = maxSamplesPerSatellite > 1
+						? durationSeconds / (maxSamplesPerSatellite - 1)
+						: requestedStepSeconds;
+					const clockMultiplier = getClockMultiplier(durationMinutes);
+
+					const czml = [
+						{
+							id: 'document',
+							name: 'Local Satellite CZML',
+							version: '1.0',
+							clock: {
+								interval: `${startIso}/${stopIso}`,
+								currentTime: startIso,
+								multiplier: clockMultiplier,
+								range: 'LOOP_STOP',
+								step: 'SYSTEM_CLOCK_MULTIPLIER'
+							}
+						}
+					];
+
+					setStatus(`Propagating ${selected.length} satellites near ${referenceDate.toISOString()} with satellite.js...`);
+
+					let skipped = 0;
+					for (let i = 0; i < selected.length; i += 1) {
+						const record = selected[i];
+						const groupName = inferGroupFromName(record.OBJECT_NAME);
+						let satrec;
+
+						try {
+							satrec = toSatrec(record, i);
+						} catch (error) {
+							skipped += 1;
+							continue;
+						}
+
+						const packet = elementToCzmlPacket({
+							record,
+							groupName,
+							colorByGroupEnabled: colorByGroup,
+							satrec,
+							startDate,
+							durationSeconds,
+							stepSeconds: effectiveStepSeconds,
+							maxSamplesPerSatellite,
+							trailSeconds,
+							startIso,
+							stopIso,
+							index: i
+						});
+
+						if (packet) {
+							czml.push(packet);
+						}
+					}
+
+					return {
+						czml,
+						totalFetched: allSatellites.length,
+						totalPreset: presetFilteredSatellites.length,
+						totalFiltered: filtered.length,
+						totalUsed: selected.length,
+						totalVisualized: czml.length - 1,
+						totalSkipped: skipped,
+						effectiveStepSeconds,
+						clockMultiplier,
+						maxSamplesPerSatellite,
+						enduranceMode
+					};
+				}
+
+				async function loadSatelliteVisualization() {
+					try {
+						loadBtn.disabled = true;
+
+						let maxCount = sanitizeNumber(maxCountInput.value, { fallback: 500, min: 1, max: 5000, integer: true });
+						let perGroupCount = sanitizeNumber(perGroupCountInput.value, { fallback: 100, min: 1, max: 5000, integer: true });
+						let multiMode = Boolean(multiGroupMode.checked);
+						let selectedMultiGroups = getSelectedMultiGroups().filter((group) => availableGroups.includes(group));
+						let colorByGroup = Boolean(colorByGroupInput.checked);
+						const enduranceMode = Boolean(enduranceModeInput.checked);
+						const stepSeconds = sanitizeNumber(stepSecondsInput.value, { fallback: 60, min: 10, max: 86400, integer: true });
+						const durationMinutes = sanitizeNumber(durationMinutesInput.value, { fallback: 90, min: 1, max: 30 * 24 * 60, integer: true });
+						let trailSeconds = sanitizeNumber(trailSecondsInput.value, { fallback: 5400, min: 0, max: 7 * 24 * 3600, integer: true });
+
+						if (enduranceMode) {
+							multiMode = true;
+							selectedMultiGroups = availableGroups.filter((groupName) => groupName !== 'ALL');
+							colorByGroup = true;
+							maxCount = 5000;
+							perGroupCount = 5000;
+							trailSeconds = Math.min(trailSeconds, 3600);
+						}
+
+						maxCountInput.value = String(maxCount);
+						perGroupCountInput.value = String(perGroupCount);
+						stepSecondsInput.value = String(stepSeconds);
+						durationMinutesInput.value = String(durationMinutes);
+						trailSecondsInput.value = String(trailSeconds);
+
+						const result = await buildLocalJsonCzml({
+							maxCount,
+							perGroupCount,
+							multiMode,
+							enduranceMode,
+							selectedMultiGroups,
+							colorByGroup,
+							stepSeconds,
+							durationMinutes,
+							trailSeconds
+						});
+
+						if (result.totalVisualized <= 0) {
+							throw new Error('No valid CZML position samples were generated. Increase sample step or reduce duration/max count.');
+						}
+
+						if (activeSatelliteSource) {
+							viewer.dataSources.remove(activeSatelliteSource, true);
+						}
+
+						setStatus('Loading CZML into Cesium...');
+						activeSatelliteSource = await Cesium.CzmlDataSource.load(result.czml);
+						viewer.dataSources.add(activeSatelliteSource);
+						await zoomToOrFallback(activeSatelliteSource);
+
+						setStatus(
+							`Rendered ${result.totalVisualized} satellites for ${multiMode ? 'multiple groups' : selectedGroup} ` +
+							`(catalog ${result.totalFetched}, preset ${result.totalPreset}, group match ${result.totalFiltered}, selected ${result.totalUsed}, skipped ${result.totalSkipped}, ` +
+							`step ${result.effectiveStepSeconds.toFixed(1)}s, samples/sat ${result.maxSamplesPerSatellite}, clock x${result.clockMultiplier}, ` +
+							`mode ${result.enduranceMode ? 'endurance' : 'standard'}, dataset "${describeDatasetPreset(selectedDatasetPreset)}", source ${DATA_FILE_PATH}, ` +
+							`epoch ${referenceDate.toISOString()}).`
+						);
+
+						setDatasetIndicator(
+							`Active dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Matching records: ${result.totalPreset} | Epoch: ${referenceDate.toISOString()} | Updated: ${new Date().toLocaleTimeString()}`
+						);
+
+						sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Globe: ${selectedGlobeStyle} | Version: ${APP_VERSION} | Epoch: ${referenceDate.toISOString()} | Loaded: ${new Date().toLocaleTimeString()}`;
+					} catch (error) {
+						console.error(error);
+						setStatus(`Error: ${error.message}`, true);
+						setDatasetIndicator(`Dataset update failed: ${error.message}`, true);
+					} finally {
+						loadBtn.disabled = false;
+					}
+				}
+
+				viewer.camera.flyTo({
+					destination: Cesium.Cartesian3.fromDegrees(-97.0, 28.5, 24000000)
+				});
+
+				async function initializeUi() {
+					try {
+						const catalog = await getLocalSatelliteCatalog();
+						updateDatasetPresetLabels(catalog);
+						const presetCatalog = applyDatasetPreset(catalog, selectedDatasetPreset);
+						populateGroupSelect(presetCatalog);
+						await applyGlobeStyle(selectedGlobeStyle);
+						setStatus(`Loaded local catalog from ${DATA_FILE_PATH}. Choose a group, then visualize.`);
+						sourceNoteElement.textContent = `Mode: local-only | Data: ${DATA_FILE_PATH} | Dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Globe: ${selectedGlobeStyle} | Version: ${APP_VERSION}`;
+						setDatasetIndicator(`Active dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Initializing...`);
+						await loadSatelliteVisualization();
+					} catch (error) {
+						console.error(error);
+						setStatus(`Initialization error: ${error.message}`, true);
+						setDatasetIndicator(`Initialization failed: ${error.message}`, true);
+					}
+				}
+
+				groupSelect.addEventListener('change', () => {
+					selectedGroup = groupSelect.value;
+					loadSatelliteVisualization();
+				});
+				multiGroupMode.addEventListener('change', () => {
+					loadSatelliteVisualization();
+				});
+				datasetSelect.addEventListener('change', async () => {
+					selectedDatasetPreset = datasetSelect.value;
+					selectedGroup = 'ALL';
+					const catalog = await getLocalSatelliteCatalog();
+					updateDatasetPresetLabels(catalog);
+					const presetCatalog = applyDatasetPreset(catalog, selectedDatasetPreset);
+
+					setDatasetIndicator(
+						`Applying dataset: ${describeDatasetPreset(selectedDatasetPreset)} | Matching records: ${presetCatalog.length} | Updated: ${new Date().toLocaleTimeString()}`
+					);
+
+					if (!presetCatalog.length) {
+						setStatus(`No records found for dataset: ${describeDatasetPreset(selectedDatasetPreset)}.`, true);
+						setDatasetIndicator(`No records found for dataset: ${describeDatasetPreset(selectedDatasetPreset)}.`, true);
+						await ensureVisibleGlobe(selectedGlobeStyle);
+						return;
+					}
+
+					populateGroupSelect(presetCatalog);
+					await loadSatelliteVisualization();
+					await ensureVisibleGlobe(selectedGlobeStyle);
+				});
+				globeStyleSelect.addEventListener('change', async () => {
+					selectedGlobeStyle = globeStyleSelect.value;
+					await applyGlobeStyle(selectedGlobeStyle);
+					await loadSatelliteVisualization();
+				});
+				multiGroupSelect.addEventListener('change', () => {
+					if (multiGroupMode.checked) {
+						loadSatelliteVisualization();
+					}
+				});
+				enduranceModeInput.addEventListener('change', () => {
+					loadSatelliteVisualization();
+				});
+				panelToggleBtn.addEventListener('click', () => {
+					setPanelCollapsed(!controlPanel.classList.contains('collapsed'));
+				});
+				loadBtn.addEventListener('click', loadSatelliteVisualization);
+				initializeUi();
+			</script>
+		</body>
+		</html>

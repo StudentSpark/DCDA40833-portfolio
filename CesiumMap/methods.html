@@ -60,6 +60,10 @@
 			padding: 0.65rem;
 			margin-bottom: 0.8rem;
 		}
+
+		.indent {
+			margin-left: 1.5rem;
+		}
 	</style>
 </head>
 <body>
@@ -81,64 +85,19 @@
 		</div>
 
 		<section>
-			<h2>Research Question Connection</h2>
-			<p>[State your research question and explain how this method is designed to answer it.]</p>
+			<h2>Methodology</h2>
+			<p class="indent">The data collection for this project was performed in two main phases. First was the collection of live satellite data for the purpose of mapping and visualizing the current satellite data in orbit. Satellite data was retrieved from the public database Celestrak. Data was served as a JSON file and converted into a CesiumJS readable format using satellite.js’s SGP4 propagation. This was then fed into CesiumJS to create an animated 3D globe visualizing current satellite movements.</p>
+			<p class="indent">The second phase was collecting traditional sources of information such as articles and books to provide contextualizing research and information. These came from reputable sources such as NASA, the United Nations, or other well known and reliable sources. Throughout the project many sources were added or removed as the focus of the project evolved and focused. A significant primary source was obtained when the modeling lead of NASA’s Orbital Debris Program Office Dr. Matney replied to a short inquiry over email. This provided a great boon of information and clarification into some of the specifics of orbital debris and their future. Originally working under Dr. Kessler, Dr. Matney proved to be an excellent resource.</p>
+			<p class="indent">This project takes a bit of a combined quantitative and qualitative approach to research. Qualitative in the sense that it describes the specific issues and proposed solutions to space debris. It is also quantitative in the sense that it measures the specific numbers and distribution of satellites in space - both historically and in the current epoch.</p>
+			<p class="indent">Performing research into orbital mechanics and space debris proved to be even more complicated than originally anticipated. Confronted with an ever-increasing scope of potential research avenues and visualizations, some details had to be cut to allow the project to be completed on time. These opportunities ranged anywhere from modelling and visualizing conjunction events (satellite collision / close call predictions) in CesiumJS to describing the 11 year solar cycle which impacts the density of Earth’s upper atmosphere, and can allow for the lower flight of satellites during the calm years of the cycle.</p>
 		</section>
-
-		<section>
-			<h2>Data Sources</h2>
-			<ul>
-				<li>[Source name + link + why chosen]</li>
-				<li>[Source name + link + why chosen]</li>
-			</ul>
-		</section>
-
-		<section>
-			<h2>Data Collection and Management Steps</h2>
-			<ol>
-				<li>[How data was collected]</li>
-				<li>[How data was cleaned / filtered]</li>
-				<li>[How data was organized / stored]</li>
-				<li>[Any transformations or joins]</li>
-			</ol>
-		</section>
-
-		<section>
-			<h2>Methods of Analysis</h2>
-			<ul>
-				<li>[Quantitative method(s)]</li>
-				<li>[Qualitative method(s)]</li>
-				<li>[Visualization method(s): maps/charts/etc.]</li>
-				<li>[Code sources used and credited]</li>
-			</ul>
-		</section>
-
-		<section>
-			<h2>Project Scope Decisions</h2>
-			<p>[What you narrowed, excluded, or simplified to keep the project manageable.]</p>
-		</section>
-
 		<section>
 			<h2>AI Tool Usage</h2>
 			<ul>
-				<li>[Which AI tools were used]</li>
-				<li>[What tasks were delegated vs done manually]</li>
-				<li>[What worked, what did not, and what you learned]</li>
-				<li>[Potential consequences/limitations of AI-assisted workflow]</li>
+				<p>Coding AI was used in the creation of various visual elements of the project. These include the initial design of the website, CesiumJS mapping, and the use of the satellite.js library to convert raw data into a CesiumJS readable format. AI was not used in the data collection, analysis, or overall planning of the project. AI remained as an assisting tool and had no impact on the research itself.	</p>
 			</ul>
 		</section>
 
-		<section>
-			<h2>Limitations and Reliability</h2>
-			<p>[Known data limits, uncertainty, and potential bias in method.]</p>
-		</section>
-
-		<section>
-			<h2>Methods Works Cited (Draft)</h2>
-			<ul>
-				<li>[APA/MLA citation + direct link]</li>
-				<li>[APA/MLA citation + direct link]</li>
-			</ul>
 		</section>
 	</main>
 </body>
